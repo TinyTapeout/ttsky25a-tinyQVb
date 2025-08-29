@@ -1,0 +1,3 @@
+[submodule "src/tinyQV"]
+	path = src/tinyQV
+	url = https://github.com/MichaelBell/tinyQV.git

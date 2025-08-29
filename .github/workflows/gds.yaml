@@ -1,0 +1,91 @@
+name: gds
+
+on: [push, workflow_dispatch, pull_request]
+
+jobs:
+  gds:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Build GDS
+        uses: TinyTapeout/tt-gds-action@ttsky25a
+        with:
+          pdk: sky130
+          tools-ref: ttsky25a
+
+  precheck:
+    needs: gds
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Run Tiny Tapeout Precheck
+        uses: TinyTapeout/tt-gds-action/precheck@ttsky25a
+        with:
+          pdk: sky130
+          tools-ref: ttsky25a
+
+  gl_test:
+    needs: gds
+    strategy:
+      matrix:
+        target:
+          - core
+          - prog
+          - peri_num_2
+          - peri_num_3
+          - peri_num_4
+          - peri_num_5
+          - peri_num_6
+          - peri_num_7
+          - peri_num_8
+          - peri_num_9
+          - peri_num_10
+          - peri_num_11
+          - peri_num_12
+          - peri_num_13
+          - peri_num_14
+          - peri_num_15
+          - peri_num_16
+          - peri_num_17
+          - peri_num_18
+          - peri_num_19
+          - peri_num_20
+          - peri_num_21
+          - peri_num_22
+          - peri_num_23
+          - peri_num_24
+          - peri_num_25
+          - peri_num_26
+          - peri_num_27
+          - peri_num_28
+          - peri_num_29
+          - peri_num_30
+          - peri_num_31
+      fail-fast: false
+    runs-on: ubuntu-24.04
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: GL test
+        uses: MichaelBell/tt-gds-action/gl_test@ttsky25a
+        with:
+          pdk: sky130
+          make-targets: ${{ matrix.target }}
+
+  viewer:
+    if: github.event_name != 'pull_request'
+    needs: gds
+    runs-on: ubuntu-24.04
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+    steps:
+      - uses: TinyTapeout/tt-gds-action/viewer@ttsky25a
+        with:
+          pdk: sky130
