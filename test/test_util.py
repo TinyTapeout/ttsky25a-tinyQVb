@@ -270,9 +270,14 @@ async def expect_store(dut, addr, bytes=4, allow_long_delay=False):
             for j in range(bytes*2):
                 await ClockCycles(dut.clk, 1, False)
                 assert select.value == 0
+                if j > 0 and (j % 8) == 0:
+                    await ClockCycles(dut.clk, 1, False)
+                    assert select.value == 0
+                    assert dut.qspi_clk_out.value == 0
+                    await ClockCycles(dut.clk, 1, False)
                 assert dut.qspi_clk_out.value == 1
                 assert dut.qspi_data_oe.value == 0xF
-                val |= dut.qspi_data_out.value << (nibble_shift_order[j])
+                val |= dut.qspi_data_out.value << (nibble_shift_order[j % 8])
                 await ClockCycles(dut.clk, 1, False)
                 assert select.value == (1 if j == bytes*2-1 else 0)
                 assert dut.qspi_clk_out.value == 0

@@ -10,7 +10,7 @@ from cocotb.utils import get_sim_time
 
 from riscvmodel.insn import *
 
-from riscvmodel.regnames import x0, x1, sp, gp, tp, a0, a1, a2, a3
+from riscvmodel.regnames import x0, x1, sp, gp, tp, a0, a1, a2, a3, a4
 from riscvmodel import csrnames
 from riscvmodel.variant import RV32E
 
@@ -355,6 +355,44 @@ async def test_load_throughput(dut):
         await send_instr(dut, encode_cswsp(tp, a2, 0x3c0))
         await expect_load(dut, 0x1001000 + i*4, i)
 
+@cocotb.test()
+async def test_multistore_interrupt(dut):
+    dut._log.info("Start")
+
+    clock = Clock(dut.clk, 15.624, units="ns")
+    cocotb.start_soon(clock.start())
+
+    # Reset
+    await reset(dut)
+
+    input_byte = 0b01101000
+    dut.ui_in.value = input_byte
+
+    def encode_sw4(base_reg, reg, imm):
+        instr = InstructionSW(base_reg, reg, imm).encode()
+        return instr | (7 << 12)
+
+    # Should start reading flash after 1 cycle
+    await ClockCycles(dut.clk, 1)
+    await start_read(dut, 0)
+
+    # Transmit a byte and enable interrupt on writeable
+    await send_instr(dut, InstructionSW(tp, x0, 0x80).encode())
+    await send_instr(dut, InstructionLUI(a0, 0x80).encode())
+    await send_instr(dut, InstructionCSRRW(x0, a0, csrnames.mie).encode())
+
+    await send_instr(dut, InstructionADDI(a1, x0, 0x10).encode())
+    await send_instr(dut, InstructionADDI(a2, x0, 0x11).encode())
+    await send_instr(dut, InstructionADDI(a3, x0, 0x12).encode())
+    await send_instr(dut, InstructionADDI(a4, x0, 0x13).encode())
+
+    for i in range(1000):
+        await send_instr(dut, encode_sw4(gp, a1, i*16))
+        await expect_store(dut, 0x1000400 + i*16, 16)
+
+    # Interrupt should be pending
+    await send_instr(dut, InstructionCSRRS(a0, x0, csrnames.mip).encode())
+    assert (await read_reg(dut, a0, False) & 0x80000) == 0x80000
 
 ### Random operation testing ###
 reg = [0] * 16
