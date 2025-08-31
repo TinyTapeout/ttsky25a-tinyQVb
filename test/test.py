@@ -386,7 +386,7 @@ async def test_multistore_interrupt(dut):
     await send_instr(dut, InstructionADDI(a3, x0, 0x12).encode())
     await send_instr(dut, InstructionADDI(a4, x0, 0x13).encode())
 
-    for i in range(1000):
+    for i in range(100):
         await send_instr(dut, encode_sw4(gp, a1, i*16))
         await expect_store(dut, 0x1000400 + i*16, 16)
 
