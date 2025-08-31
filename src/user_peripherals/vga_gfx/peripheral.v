@@ -109,12 +109,19 @@ module tqvp_rebelmike_vga_gfx (
 
     // Interrupt generation
     reg interrupt;
+    reg interrupt_lock;
     always @(posedge clk) begin
-        if (is_read_txn && address == 6'h1) begin
+        if (!rst_n) begin
             interrupt <= 0;
-        end else if ((vga_y_lo[3:0] | interrupt_y_mask) == 4'hf) begin
-            if (vga_x == {interrupt_x_offset == 2'b00, interrupt_x_offset, 8'h0}) begin
-                interrupt <= 1;
+            interrupt_lock <= 0;
+        end else begin
+            if (wen && (address == 6'h1)) interrupt_lock <= 1;
+            if (is_read_txn && address == 6'h1) begin
+                interrupt <= 0;
+            end else if (interrupt_lock && ((vga_y_lo[3:0] | interrupt_y_mask) == 4'hf)) begin
+                if (vga_x == {interrupt_x_offset == 2'b00, interrupt_x_offset, 8'h0}) begin
+                    interrupt <= 1;
+                end
             end
         end
     end
