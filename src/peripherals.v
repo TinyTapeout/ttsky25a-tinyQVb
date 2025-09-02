@@ -662,7 +662,7 @@ module tinyQV_peripherals #(parameter CLOCK_MHZ=64) (
         .data_out(data_from_simple_peri[13])
     );
 
-    tqvp_spi_peripheral i_user_simple14 (
+    tqvp_gera_gray_coder i_gera_gray_simple014 (
         .clk(clk),
         .rst_n(rst_n),
 
