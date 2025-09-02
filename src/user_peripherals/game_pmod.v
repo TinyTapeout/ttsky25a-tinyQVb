@@ -49,23 +49,6 @@ module gamepad_pmod_driver #(
   reg pmod_latch_prev;
   reg [BIT_WIDTH-1:0] shift_reg;
 
-  // Sync Pmod signals to the clk domain:
-  reg [1:0] pmod_data_sync;
-  reg [1:0] pmod_clk_sync;
-  reg [1:0] pmod_latch_sync;
-
-  always @(posedge clk) begin
-    if (~rst_n) begin
-      pmod_data_sync  <= 2'b0;
-      pmod_clk_sync   <= 2'b0;
-      pmod_latch_sync <= 2'b0;
-    end else begin
-      pmod_data_sync  <= {pmod_data_sync[0], pmod_data};
-      pmod_clk_sync   <= {pmod_clk_sync[0], pmod_clk};
-      pmod_latch_sync <= {pmod_latch_sync[0], pmod_latch};
-    end
-  end
-
   always @(posedge clk) begin
     if (~rst_n) begin
       /* Initialize data and shift registers to all 1s so they're detected as "not present".
@@ -80,17 +63,17 @@ module gamepad_pmod_driver #(
       pmod_latch_prev <= 1'b0;
     end
     begin
-      pmod_clk_prev   <= pmod_clk_sync[1];
-      pmod_latch_prev <= pmod_latch_sync[1];
+      pmod_clk_prev   <= pmod_clk;
+      pmod_latch_prev <= pmod_latch;
 
       // Capture data on rising edge of pmod_latch:
-      if (pmod_latch_sync[1] & ~pmod_latch_prev) begin
+      if (pmod_latch & ~pmod_latch_prev) begin
         data_reg <= shift_reg;
       end
 
       // Sample data on rising edge of pmod_clk:
-      if (pmod_clk_sync[1] & ~pmod_clk_prev) begin
-        shift_reg <= {shift_reg[BIT_WIDTH-2:0], pmod_data_sync[1]};
+      if (pmod_clk & ~pmod_clk_prev) begin
+        shift_reg <= {shift_reg[BIT_WIDTH-2:0], pmod_data};
       end
     end
   end
