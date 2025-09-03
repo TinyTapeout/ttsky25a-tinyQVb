@@ -15,7 +15,7 @@ You can also include images in this folder and reference them in the markdown. E
 
 Author: Gerardo Huerta
 
-Peripheral index: 14
+Peripheral index: 16
 
 ## What it does
 
