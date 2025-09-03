@@ -36,7 +36,7 @@ async def test_project(dut):
     # Test register write and read back
     await tqv.write_reg(2, 30)
 
-    assert await tqv.read_reg(2) == 20
+    assert await tqv.read_byte_reg(2) == 20
 
     # Set an input value, in the example this will be added to the register value
     #dut.ui_in.value = 54
