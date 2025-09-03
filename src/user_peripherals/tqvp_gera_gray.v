@@ -32,43 +32,58 @@ module tqvp_gera_gray_coder (
     localparam Gray_2_Bin   = 4'b0010;
     
     //Internal reg
-    reg [7:0] gray_out;
-    reg [7:0] bin_out;
+    reg [7:0] bin_reg;
+    reg [7:0] gray_reg;
     integer i;
+    //Output wires
+    wire [7:0] bin_out;
+    wire [7:0] gray_out;
 
     always @(posedge clk) begin
         if (!rst_n) begin
-            gray_out <= 0;
+            bin_reg <= 0;
+            gray_reg <= 0;
         end else begin
             if (data_write) begin
                 case (address)
                     clear_output: begin
-                        gray_out <= 0;
+                        gray_reg <= 0;
+                        bin_reg <= 0;
                     end
                     Bin_2_Gray: begin
-                        gray_out [7] <= data_in[7];
-                        for (i = 0; i < 7; i = i + 1) begin
-                            gray_out [i] <= data_in[i + 1] ^ data_in[i];
-                        end
+                        gray_reg <= data_in;
                     end
+                    Gray_2_Bin: begin
+                        bin_reg <= data_in;
+                    end
+
                     default: begin 
-                        gray_out <= 0;
+                        gray_reg <= 0;
+                        bin_reg <= 0;
                     end
                 endcase
             end
         end
     end
 
-    always @(posedge clk) begin
-        if (data_write) begin
-            if (address == Gray_2_Bin) begin
-                bin_out [7] = data_in[7];
-                for (i = 6; i >= 0; i = i - 1) begin
-                    bin_out[i] = data_in[i] ^ bin_out[i + 1];
-                end
-            end
+//Binary to Gray Encoder block
+  genvar k;
+  generate
+    assign gray_out [7] = gray_reg[7];
+        for (k = 0; k < 7; k = k + 1) begin
+            assign gray_out[k] = gray_reg[k] ^ gray_reg[k + 1];
         end
-    end
+  endgenerate
+
+// Gray to Binary Decoder block:
+  genvar j;
+  generate
+    assign bin_out [7] = bin_reg[7];
+        for (j = 6; j >= 0; j = j - 1) begin
+            assign bin_out[j] = bin_reg[j] ^ bin_out[j + 1];
+        end
+  endgenerate
+
 
     //Both output are written pmod and data out
 
