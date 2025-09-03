@@ -10,7 +10,7 @@ from tqv import TinyQV
 # When submitting your design, change this to 16 + the peripheral number
 # in peripherals.v.  e.g. if your design is i_user_simple00, set this to 16.
 # The peripheral number is not used by the test harness.
-PERIPHERAL_NUM = 16 + 14
+PERIPHERAL_NUM = 16
 print("start")
 
 @cocotb.test()
@@ -36,7 +36,7 @@ async def test_project(dut):
     # Test register write and read back
     await tqv.write_reg(2, 30)
 
-    assert await tqv.read_byte_reg(2) == 20
+    assert await tqv.read_reg(2) == 20
 
     # Set an input value, in the example this will be added to the register value
     #dut.ui_in.value = 54
