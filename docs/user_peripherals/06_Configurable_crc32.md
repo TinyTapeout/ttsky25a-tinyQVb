@@ -56,6 +56,3 @@ It has been tested for the following protocols with the secuence "123456789"
 | CRC-32/MPEG-2       | 0x0376E6E7 | 0x04C11DB7 |     0     |     0     |     1     |	
 | CRC-32/XFER         | 0xBD0BE338 | 0x000000AF |     0     |     0     |     0     |	
 
-## External hardware
-
-There is no external Hardware necesary
