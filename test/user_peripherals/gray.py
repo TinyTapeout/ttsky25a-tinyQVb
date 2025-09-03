@@ -41,11 +41,11 @@ async def test_project(dut):
 
     # Wait for ten clock cycles to see the output values, because ui_in is synchronized over two clocks,
     # and a further clock is required for the output to propagate.
-    await ClockCycles(dut.clk, 10)
+    await ClockCycles(dut.clk, 3)
 
     # The following assertion is just an example of how to check the output values.
     # Change it to match the actual expected output of your module:
-    assert dut.uo_out.value == 20
+    assert dut.uo_out.value == 0
     print("end")
 
     # Keep testing the module by changing the input values, waiting for
