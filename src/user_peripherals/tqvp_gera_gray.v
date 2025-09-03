@@ -59,7 +59,7 @@ module tqvp_gera_gray_coder (
         end
     end
 
-    always @(*) begin
+    always @(posedge clk) begin
         if (data_write) begin
             if (address == Gray_2_Bin) begin
                 bin_out [7] = data_in[7];
