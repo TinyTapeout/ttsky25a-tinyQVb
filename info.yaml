@@ -35,6 +35,8 @@ project:
     - "user_peripherals/vga_gfx/peripheral.v"
     - "user_peripherals/vga_gfx/vga_timing.v"
     - "user_peripherals/vga_gfx/latch_config.v"
+    - "user_peripherals/vga/vga_timing.v"
+    - "user_peripherals/vga/peripheral.v"
     - "tinyQV/cpu/tinyqv.v"
     - "tinyQV/cpu/alu.v"
     - "tinyQV/cpu/core.v"
