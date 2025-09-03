@@ -15,7 +15,7 @@ You can also include images in this folder and reference them in the markdown. E
 
 Author: Vicente Ramirez & Francisco Aguirre
 
-Peripheral index: nn
+Peripheral index: 06
 
 ## What it does
 
