@@ -453,7 +453,7 @@ module tinyQV_peripherals #(parameter CLOCK_MHZ=64) (
     // --------------------------------------------------------------------- //
     // Byte interface peripherals
 
-    tqvp_byte_empty i_user_simple00 (
+    tqvp_gera_gray_coder i_gera_gray_simple00 (
         .clk(clk),
         .rst_n(rst_n),
 
@@ -662,7 +662,7 @@ module tinyQV_peripherals #(parameter CLOCK_MHZ=64) (
         .data_out(data_from_simple_peri[13])
     );
 
-    tqvp_gera_gray_coder i_gera_gray_simple014 (
+    tqvp_spi_peripheral i_user_simple14 (
         .clk(clk),
         .rst_n(rst_n),
 
