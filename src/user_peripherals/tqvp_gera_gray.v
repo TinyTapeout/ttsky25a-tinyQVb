@@ -39,13 +39,11 @@ module tqvp_gera_gray_coder (
     always @(posedge clk) begin
         if (!rst_n) begin
             gray_out <= 0;
-            bin_out <= 0;
         end else begin
             if (data_write) begin
                 case (address)
                     clear_output: begin
                         gray_out <= 0;
-                        bin_out  <= 0;
                     end
                     Bin_2_Gray: begin
                         gray_out [7] <= data_in[7];
@@ -53,17 +51,21 @@ module tqvp_gera_gray_coder (
                             gray_out [i] <= data_in[i + 1] ^ data_in[i];
                         end
                     end
-                    Gray_2_Bin: begin
-                        bin_out [7] <= data_in[7];
-                        for (i = 6; i >= 0; i = i - 1) begin
-                            bin_out[i] = data_in[i] ^ bin_out[i + 1];
-                        end
-                    end
                     default: begin 
                         gray_out <= 0;
-                        bin_out  <= 0;
                     end
                 endcase
+            end
+        end
+    end
+
+    always @(*) begin
+        if (data_write) begin
+            if (address == Gray_2_Bin) begin
+                bin_out [7] = data_in[7];
+                for (i = 6; i >= 0; i = i - 1) begin
+                    bin_out[i] = data_in[i] ^ bin_out[i + 1];
+                end
             end
         end
     end
