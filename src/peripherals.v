@@ -261,7 +261,7 @@ module tinyQV_peripherals #(parameter CLOCK_MHZ=64) (
     );
 
 
-        crc_wrapper  i_user_peri06 (
+    tqvp_crc_wrapper  i_user_peri06 (
         .clk(clk),
         .rst_n(rst_n),
 
