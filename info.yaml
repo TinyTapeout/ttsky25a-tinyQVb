@@ -43,6 +43,7 @@ project:
     - "user_peripherals/freq_synth/mux32.v"
     - "user_peripherals/freq_synth/freq_synth.v"
     - "user_peripherals/freq_synth/peripheral.v"
+    - "user_peripherals/stevej_watchdog_window.v"
     - "tinyQV/cpu/tinyqv.v"
     - "tinyQV/cpu/alu.v"
     - "tinyQV/cpu/core.v"
