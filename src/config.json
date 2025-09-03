@@ -34,7 +34,10 @@
   "USE_LIGHTER": 0,
 
   "//": "SDC Customizations",
-  "FALLBACK_SDC_FILE": "src/base.sdc",
+  "FALLBACK_SDC_FILE": "dir::base.sdc",
+
+  "//": "Prevent resizing & buffering near nets matching this regex",
+  "RSZ_DONT_TOUCH_RX": "_dont_touch",
 
   "//": "Routing tweaks",
   "DESIGN_REPAIR_MAX_SLEW_PCT": 25,
