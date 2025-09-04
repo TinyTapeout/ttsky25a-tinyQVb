@@ -16,6 +16,8 @@ from tqv import TinyQV
 
 # Reminder: assign uo_out = {interrupt_high, interrupt_low, saw_pat, watchdog_enabled, after_window_start, after_window_close, 2'b00};
 
+PERIPH_NUM = 9
+
 @cocotb.test()
 async def test_enabled_without_window(dut):
     "Enabling the watchdog without a timer should result in an immediate trip."
