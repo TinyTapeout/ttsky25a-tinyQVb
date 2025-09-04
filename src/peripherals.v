@@ -374,7 +374,7 @@ module tinyQV_peripherals #(parameter CLOCK_MHZ=64) (
         .user_interrupt(user_interrupts[11])
     );
 
-    tqvp_full_empty i_user_peri12 (
+    tqvp_rejunity_vga i_rejunity_vga12 (
         .clk(clk),
         .rst_n(rst_n),
 

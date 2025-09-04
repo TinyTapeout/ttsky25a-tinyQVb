@@ -36,6 +36,8 @@ project:
     - "user_peripherals/RV2A03/peripheral.v"
     - "user_peripherals/digital_integrator/integrator_core.v"
     - "user_peripherals/digital_integrator/peripheral.v"
+    - "user_peripherals/vga/vga_timing.v"
+    - "user_peripherals/vga/peripheral.v"
     - "user_peripherals/tqvp_gera_gray.v"
     - "user_peripherals/freq_synth/transpose_matrix.v"
     - "user_peripherals/freq_synth/ring_osc_stage.v"
