@@ -44,6 +44,7 @@ project:
     - "user_peripherals/freq_synth/mux32.v"
     - "user_peripherals/freq_synth/freq_synth.v"
     - "user_peripherals/freq_synth/peripheral.v"
+    - "user_peripherals/fib_rng/fib_rng.v"
     - "tinyQV/cpu/tinyqv.v"
     - "tinyQV/cpu/alu.v"
     - "tinyQV/cpu/core.v"
