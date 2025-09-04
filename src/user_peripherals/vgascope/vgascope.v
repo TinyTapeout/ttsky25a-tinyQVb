@@ -135,7 +135,7 @@ module tqvp_cattuto_vgascope #(parameter CLOCK_MHZ=64) (
     // TinyVGA PMOD
     assign uo_out = {hsync, B[0], G[0], R[0], vsync, B[1], G[1], R[1]};
 
-    vga_timing hvsync_gen (
+    vga_timing_cc hvsync_gen (
         .clk(clk),
         .rst_n(rst_n),
         .hsync(hsync),
