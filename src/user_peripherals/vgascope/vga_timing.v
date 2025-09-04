@@ -3,7 +3,7 @@
 // courtesy of htfab, https://github.com/htfab/tinyqv-baby-vga
 // (modified to save gates and remove interrupt code)
 
-module vga_timing (
+module vga_timing_cc (
     input wire clk,
     input wire rst_n,
     output reg [5:0] x_hi,
