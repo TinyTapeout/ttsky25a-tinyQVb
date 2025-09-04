@@ -468,7 +468,7 @@ module tinyQV_peripherals #(parameter CLOCK_MHZ=64) (
         .data_out(data_from_simple_peri[0])
     );
 
-    tqvp_byte_empty i_user_simple01 (
+    tqvp_keszocze_fib_rng i_keszocze_fib_rng_simple01 (
         .clk(clk),
         .rst_n(rst_n),
 
