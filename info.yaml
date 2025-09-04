@@ -37,6 +37,7 @@ project:
     - "user_peripherals/vga_gfx/latch_config.v"
     - "user_peripherals/digital_integrator/integrator_core.v"
     - "user_peripherals/digital_integrator/peripheral.v"
+    - "user_peripherals/tqvp_gera_gray.v"
     - "user_peripherals/freq_synth/transpose_matrix.v"
     - "user_peripherals/freq_synth/ring_osc_stage.v"
     - "user_peripherals/freq_synth/ring_osc.v"
