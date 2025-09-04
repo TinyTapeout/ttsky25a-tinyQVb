@@ -16,7 +16,7 @@ from tqv import TinyQV
 
 # Reminder: assign uo_out = {interrupt_high, interrupt_low, saw_pat, watchdog_enabled, after_window_start, after_window_close, 2'b00};
 
-PERIPH_NUM = 9
+PERIPHERAL_NUM = 9
 
 @cocotb.test()
 async def test_enabled_without_window(dut):
@@ -27,7 +27,7 @@ async def test_enabled_without_window(dut):
     clock = Clock(dut.clk, 100, units="ns")
     cocotb.start_soon(clock.start())
 
-    tqv = TinyQV(dut)
+    tqv = TinyQV(dut, PERIPHERAL_NUM)
     await tqv.reset()
 
     await tqv.write_word_reg(0, 0x1)
@@ -44,7 +44,7 @@ async def test_enabled_with_window_close_trigger_after_expiration(dut):
     clock = Clock(dut.clk, 100, units="ns")
     cocotb.start_soon(clock.start())
 
-    tqv = TinyQV(dut)
+    tqv = TinyQV(dut, PERIPHERAL_NUM)
     await tqv.reset()
 
     dut._log.info("Testing a watchdog with a WINDOW_CLOSE but no WINDOW_START")
@@ -72,7 +72,7 @@ async def test_enabled_with_window_close_and_then_disable_no_trigger(dut):
     clock = Clock(dut.clk, 100, units="ns")
     cocotb.start_soon(clock.start())
 
-    tqv = TinyQV(dut)
+    tqv = TinyQV(dut, PERIPHERAL_NUM)
     await tqv.reset()
     dut._log.info("Enabling with WINDOW_CLOSE and then disabling should cause no trigger.")
 
@@ -102,7 +102,7 @@ async def test_enabled_with_window_close_and_then_pat_no_trigger(dut):
     clock = Clock(dut.clk, 100, units="ns")
     cocotb.start_soon(clock.start())
 
-    tqv = TinyQV(dut)
+    tqv = TinyQV(dut, PERIPHERAL_NUM)
     await tqv.reset()
     dut._log.info("Enabling with WINDOW_CLOSE and then patting should cause no trigger.")
 
@@ -134,7 +134,7 @@ async def test_enabled_with_window_close_no_start_with_pat_twice_then_expire(dut
     clock = Clock(dut.clk, 100, units="ns")
     cocotb.start_soon(clock.start())
 
-    tqv = TinyQV(dut)
+    tqv = TinyQV(dut, PERIPHERAL_NUM)
     await tqv.reset()
     dut._log.info("Enabling with only WINDOW_CLOSE and patting twice causes the timer to reset.")
 
@@ -170,7 +170,7 @@ async def test_enabled_with_window_close_and_open_not_enabled_no_trigger(dut):
     clock = Clock(dut.clk, 100, units="ns")
     cocotb.start_soon(clock.start())
 
-    tqv = TinyQV(dut)
+    tqv = TinyQV(dut, PERIPHERAL_NUM)
     await tqv.reset()
     dut._log.info("Setting WINDOW_OPEN and WINDOW_CLOSE and not enabling it should result in no trigger.")
 
@@ -195,7 +195,7 @@ async def test_trigger_followed_by_disable_allows_timer_again(dut):
     clock = Clock(dut.clk, 100, units="ns")
     cocotb.start_soon(clock.start())
 
-    tqv = TinyQV(dut)
+    tqv = TinyQV(dut, PERIPHERAL_NUM)
     await tqv.reset()
 
     # WINDOW_CLOSE is set to 25 cycles, the minimum number of cycles a window can be due to timing.
