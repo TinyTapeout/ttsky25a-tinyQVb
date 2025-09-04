@@ -52,7 +52,9 @@ module tqvp_fjpolo_rv2a03 (
     input  [1:0] data_read_n,   // 11 = no read, 00 = 8-bits, 01 = 16-bits, 10 = 32-bits
     
     output [31:0] data_out,      // Data out from the peripheral
-    output        data_ready
+    output        data_ready,
+
+    output        user_interrupt  // Dedicated interrupt request for this peripheral
 );
 
     wire [7:0] apu_dout;
@@ -206,6 +208,7 @@ module tqvp_fjpolo_rv2a03 (
     assign data_out = data_out_reg;
 
     assign data_ready = 1;
+    assign user_interrupt = 0;
 
     wire _unused = &{data_read_n, data_ready, data_in[31:8], ui_in[1], ui_in[1], 1'b0};
 
