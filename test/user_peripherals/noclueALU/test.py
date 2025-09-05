@@ -32,10 +32,13 @@ async def test_project(dut):
 
     # Testing register write and read back
     await tqv.write_reg(0, 20)
+    await ClockCycles(dut.clk, 1)
     assert await tqv.read_reg(0) == 20
     await tqv.write_reg(1, 30)
+    await ClockCycles(dut.clk, 1)
     assert await tqv.read_reg(1) == 30
     await tqv.write_reg(2, 40)
+    await ClockCycles(dut.clk, 1)
     assert await tqv.read_reg(2) == 40
 
     
