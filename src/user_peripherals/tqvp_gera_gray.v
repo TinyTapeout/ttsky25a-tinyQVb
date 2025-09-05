@@ -34,7 +34,7 @@ module tqvp_gera_gray_coder (
     //Internal reg
     reg [7:0] bin_reg;
     reg [7:0] gray_reg;
-    reg [3:0] out_flag = 4'b0000;
+    reg [3:0] out_flag;
     
     integer i;
     
@@ -46,13 +46,14 @@ module tqvp_gera_gray_coder (
         if (!rst_n) begin
             bin_reg <= 0;
             gray_reg <= 0;
-            out_flag <= 4'b0000;
+            out_flag <= 0;
         end else begin
             if (data_write) begin
                 case (address)
                     clear_output: begin
                         gray_reg <= 0;
                         bin_reg <= 0;
+                        out_flag <= 0;
                     end
                     Bin_2_Gray: begin
                         gray_reg <= data_in;
