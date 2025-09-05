@@ -23,33 +23,25 @@ TODO: Explain what your peripheral does and how it works
 
 ## Register map
 
-| Address | Name    | Access | Description                                                      |
-|---------|---------|--------|------------------------------------------------------------------|
-| 0x00    | PIXDAT0 | W      | Pixel data (1-bit per pixel)   0..31                             |
-| 0x04    | PIXDAT1 | W      | Pixel data (1-bit per pixel)  32..63                             |
-| 0x08    | PIXDAT2 | W      | Pixel data (1-bit per pixel)  64..xx                             |
-| 0x0C    | PIXDAT3 | W      | Pixel data (1-bit per pixel)  xx..xx                             |
-| 0x10    | PIXDAT4 | W      | Pixel data (1-bit per pixel)  xx..xx                             |
-| 0x14    | PIXDAT5 | W      | Pixel data (1-bit per pixel)  xx..xx                             |
-| 0x18    | PIXDAT6 | W      | Pixel data (1-bit per pixel)  xx..xx                       		|
-| 0x1C    | PIXDAT7 | W      | Pixel data (1-bit per pixel) 224..255                            |
-| 0x20    | PIXDAT8 | W      | Pixel data (1-bit per pixel)  xx..xx                             |
-| 0x24    | PIXDAT9 | W      | Pixel data (1-bit per pixel) 288..x319                           |
-| 0x30	  | BGCOLOR | W	     | Background color: xxBBGGRR, default 010000 = dark blue			|
-| 0x31	  | FGCOLOR	| W		 | Foreground color: xxBBGGRR, default 001011 = golden yellow		|
-| 0x32	  | P2COLOR	| W		 | 3rd color, if 4 color palette enabled: xxBBGGRR |
-| 0x33	  | P3COLOR	| W		 | 3th color, if 4 color palette enabled: xxBBGGRR |
-| 0x34	  | STRIDE	| W		 | VRAM bit stride per pixel row (bits 8..0), default 20. Setting -1 will reset VRAM index to 0 on the next pixel row |
-| 0x38	  | PIXSIZE	| W		 | Pixel size: width in clocks (bits 6..0), height in scanlines (bits 22..16) |
-| 0x3C	  | MODE	| W		 | Interrupt: 0=frame, 1=scanline, 2=pixel row, 3=disabled (bits 1..0) |
-|    	  |     	|  		 | Screen width: 0=1024, 1=960 clocks (bit 2) |
-|		  |         |        | Color mode: 0=2 colors, 1=4 color palette |
+| Address    | Name       | Access      | Description                                                      |
+|------------|------------|-------------|------------------------------------------------------------------|
+| 0x00..0x27 | PIXELS     | W 32bit     | Pixel data VRAM contains either 320 1-bit or 160 2-bit pixels    |
+| 0x30       | COLOR_0    | W 32/16/8bit| Background color: xxBBGGRR, default 010000 = dark blue           |
+| 0x31       | COLOR_1    | W 8bit      | Foreground color: xxBBGGRR, default 001011 = golden yellow       |
+| 0x32       | COLOR_2    | W 16/8bit   | 3rd color, when 4 color mode is enabled: xxBBGGRR                |
+| 0x33       | COLOR_3    | W 8bit      | 4th color, when 4 color mode is enabled: xxBBGGRR                |
+| 0x34       | PIXEL_SIZE | W 8bit      | Pixel size: width in clocks (bits 6..0), height in scanlines (bits 22..16) |
+| 0x38       | VRAM_STRIDE| W 32/16bit	| VRAM bit stride per pixel row (bits 8..0), default 20. Setting -1 will reset VRAM index to 0 on the next pixel row |
+| 0x3C	     | MODE	      | W	32/16/8bit| Interrupt: 0=frame, 1=scanline, 2=pixel row, 3=disabled (bits 1..0) |
+|            |            |          | Pixel clock: 0=64 MHz 804 scanlines, 1=63.5 MHz 798 scanlines (bit 4) |
+|            |            |          | Screen width: 0=1024, 1=960 clocks (bit 5) |
+|            |            |          | Color mode: 0=2 colors, 1=4 color palette (bit 6) |
 
 | Address | Name        | Access | Description                                                  |
 |---------|-------------|--------|--------------------------------------------------------------|
 | 0x00    | WAIT_HBLANK | R      | Block CPU waiting for Horizontal BLANK                       |
 | 0x04    | WAIT_PIXEL0 | R      | Block CPU waiting for display to reach the 1st pixel of the buffer |
-| 0x08    | SCANLINE    | R      | Returns current scanlineL: 0..767 visible portion of the screen, >=768 offscreen |
+| 0x08    | SCANLINE    | R      | Returns current scanline: 0..767 visible portion of the screen, >=768 offscreen |
 
 ## How to test
 

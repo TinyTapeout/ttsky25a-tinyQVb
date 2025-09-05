@@ -27,14 +27,15 @@ module tqvp_rejunity_vga (
 
     output        user_interrupt  // Dedicated interrupt request for this peripheral
 );
+
     `define PIXEL_COUNT 320
     localparam [5:0]    REG_LAST_PIXEL      = `PIXEL_COUNT / 8 - 1;
     localparam [5:0]    REG_BG_COLOR        = 6'h30;
     localparam [5:0]    REG_FG_COLOR        = 6'h31;
     localparam [5:0]    REG_F2_COLOR        = 6'h32;
     localparam [5:0]    REG_F3_COLOR        = 6'h33;
-    localparam [5:0]    REG_VRAM_STRIDE     = 6'h34;
-    localparam [5:0]    REG_PIXEL_SIZE      = 6'h38;
+    localparam [5:0]    REG_PIXEL_SIZE      = 6'h34;
+    localparam [5:0]    REG_VRAM_STRIDE     = 6'h38;
     localparam [5:0]    REG_MODE            = 6'h3C;
 
     localparam [5:0]    REQ_WAIT_HBLANK     = 6'h00;
@@ -53,8 +54,8 @@ module tqvp_rejunity_vga (
 
     // 320 vram = 20x16 @ 1024x768
     localparam DEFAULT_STRIDE = 9'd20;
-    localparam DEFAULT_PIXEL_WIDTH  = 7'd52;    // 1024/20=~52
-    // localparam DEFAULT_PIXEL_HEIGHT = 7'd48; // 768/16=48
+    localparam DEFAULT_PIXEL_WIDTH  = 7'd52; // 1024/20=~52
+    localparam DEFAULT_PIXEL_HEIGHT = 7'd48; // 768/16=48
 
     // 320 vram = 32x10 @ 1024x768
     // localparam DEFAULT_STRIDE = 9'd32;
@@ -67,8 +68,7 @@ module tqvp_rejunity_vga (
     // localparam DEFAULT_PIXEL_WIDTH  = 7'd54; // 1024/18=~54
     // localparam DEFAULT_PIXEL_HEIGHT = 7'd55; // 768/14=~55
 
-    localparam DEFAULT_PIXEL_HEIGHT = 7'd2;
-
+    // localparam DEFAULT_PIXEL_HEIGHT = 7'd2;
 
     // registers
     reg [`PIXEL_COUNT-1:0] vram;
@@ -83,12 +83,13 @@ module tqvp_rejunity_vga (
 
     reg [1:0]   interrupt_type;     // 0: interrupt per frame, 1: scanline, 2: pixel row, 3: interrupt disabled
     reg         vga_960_vs_1024;    // 0: 1024 clocks, 1: 960 clocks per visible portion of scanline
+    reg         vga_63_5mhz;        // 0: 804 scanlines 64MHz, 1: 798 scanlines 63.5MHz, 
     reg         vga_4colors;        // 0: 2 color palette, 1: 4 color palette
 
-    reg         pause_cpu;
     reg         wait_hblank;
     reg         wait_pixel0;
-    assign data_ready = !pause_cpu;
+    reg         release_cpu_pulse;  // 1 cycle pulse after pausing cpu for wait_hblank or wait_pixel0
+    assign data_ready = release_cpu_pulse;
 
     wire is_read = ~&data_read_n;
     wire is_write = ~&data_write_n;
@@ -109,9 +110,10 @@ module tqvp_rejunity_vga (
 
             interrupt_type  <= 2'b00;
             vga_960_vs_1024 <= 1'b0;
+            vga_63_5mhz     <= 1'b0; // default to 64 MHz
             vga_4colors     <= 1'b0;
 
-            pause_cpu   <= 1'b0;
+            release_cpu_pulse <= 1'b1; // hold data_ready=1 just in case during the reset
             wait_hblank <= 1'b0;
             wait_pixel0 <= 1'b0;
         end else begin
@@ -142,10 +144,6 @@ module tqvp_rejunity_vga (
                     f2_color <= data_in[0 +: 6];
                 end else if (address == REG_F3_COLOR) begin
                     f3_color <= data_in[0 +: 6];
-                end else if (address == REG_VRAM_STRIDE) begin
-                    vram_stride[7:0] <= data_in[7:0];
-                    vram_stride[8]   <= is_write_8  ? 1'b0 // 8-bit write sets the highest bit(s) to 0
-                                                    : data_in[8];
                 end else if (address == REG_PIXEL_SIZE     && is_write_32) begin
                     vga_x_per_pixel <= data_in[0  +: 7];
                     vga_y_per_pixel <= data_in[16 +: 7];
@@ -153,34 +151,46 @@ module tqvp_rejunity_vga (
                     vga_x_per_pixel <= data_in[0  +: 7];
                 end else if (address == REG_PIXEL_SIZE + 2 && is_write_16) begin
                     vga_y_per_pixel <= data_in[0  +: 7];
+                end else if (address == REG_VRAM_STRIDE) begin
+                    vram_stride[7:0] <= data_in[7:0];
+                    vram_stride[8]  <= is_write_8   ? 1'b0 // 8-bit write sets the highest bit(s) to 0
+                                                    : data_in[8];
                 end else if (address == REG_MODE) begin
-                    interrupt_type <= data_in[1:0];
-                    vga_960_vs_1024 <= data_in[2];
-                    vga_4colors <= data_in[3];
+                    interrupt_type  <= data_in[1:0];
+                    vga_63_5mhz     <= data_in[4];
+                    vga_960_vs_1024 <= data_in[5];
+                    vga_4colors     <= data_in[6];
                 end
                 
             // READ register
             end else if (is_read) begin
-                if (         address == REQ_WAIT_HBLANK) begin
-                    pause_cpu   <= 1'b1;
-                    wait_hblank <= 1'b1;
-                    wait_pixel0 <= 1'b0;
-                end else if (address == REQ_WAIT_PIXEL0) begin
-                    pause_cpu   <= 1'b1;
-                    wait_hblank <= 1'b0;
-                    wait_pixel0 <= 1'b1;
+                if (         address == REQ_WAIT_HBLANK && !release_cpu_pulse) begin
+                    wait_hblank     <= 1'b1;
+                    wait_pixel0     <= 1'b0;
+                end else if (address == REQ_WAIT_PIXEL0 && !release_cpu_pulse) begin
+                    wait_hblank     <= 1'b0;
+                    wait_pixel0     <= 1'b1;
+                end else begin
+                    release_cpu_pulse <= 1'b1; // immediately release CPU on all reads except WAIT ones
                 end
+            end
+
+            if (!is_read) begin
+                release_cpu_pulse   <= 1'b0;
+                wait_pixel0         <= 1'b0;
+                wait_hblank         <= 1'b0;
             end
 
             if (wait_hblank && vga_blank) begin // NOTE: do not block cpu during the VBLANK/VSYNC
                                                 // TODO: block until the next blank, if already inside the blank
-                pause_cpu   <= 1'b0;
-                wait_hblank <= 1'b0;
+                release_cpu_pulse   <= 1'b1;
+                wait_hblank         <= 1'b0;
             end
             if (wait_pixel0 && vram_index == 0) begin
-                pause_cpu   <= 0;
-                wait_pixel0 <= 0;
+                release_cpu_pulse   <= 1'b1;
+                wait_pixel0         <= 1'b0;
             end
+
         end
     end
 
@@ -198,13 +208,14 @@ module tqvp_rejunity_vga (
     wire        vga_new_scanline;
     wire        vga_blank;
 
-    vga_timing_rejunity vga (
+    vga_timing vga (
         .clk,
         .rst_n,
         .cli(vga_cli),
         .enable_interrupt_on_hblank(vga_ei_hblank),
         .enable_interrupt_on_vblank(vga_ei_vblank),
         .narrow_960(vga_960_vs_1024),
+        .extra_vblank_lines_for_64mhz(vga_63_5mhz),
         .x(vga_x),
         .y(vga_y),
         .hsync(vga_hsync),
