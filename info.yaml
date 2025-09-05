@@ -1,9 +1,9 @@
 # Tiny Tapeout project information
 project:
-  title:        "TinyQV B - Crowdsourced Risc-V SoC"      # Project title
+  title:        "TinyQV 'Berzerk' - Crowdsourced Risc-V SoC"      # Project title
   author:       "Michael Bell, et al"      # Your name
   discord:      "rebelmike"      # Your discord username, for communication and automatically assigning you a Tapeout role (optional)
-  description:  "A Risc-V SoC with peripherals from the Tiny Tapeout Risc-V challenge, second instance"      # One line description of what your project does
+  description:  "A Risc-V SoC with peripherals from the Tiny Tapeout Risc-V challenge, codename 'Berzerk'"      # One line description of what your project does
   language:     "Verilog" # other examples include SystemVerilog, Amaranth, VHDL, etc
   clock_hz:     64000000       # Clock frequency in Hz (or 0 if not applicable)
 
