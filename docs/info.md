@@ -51,6 +51,7 @@ See also [debug docs](debug.md)
 
 | Register | Address | Description |
 | -------- | ------- | ----------- |
+| MTIME_DIVIDER | 0x800002C | MTIME counts at clock / (MTIME_DIVIDER + 1).  Bits 0 and 1 are fixed at 1, so multiples of 4MHz are supported. |
 | MTIME    | 0xFFFFF00 (RW) | Get/set the 1MHz time count |
 | MTIMECMP | 0xFFFFF04 (RW) | Get/set the time to trigger the timer interrupt |
 
@@ -64,7 +65,7 @@ If MTIME is after MTIMECMP (by less than 2^30 microseconds to deal with wrap), t
 | -------- | ------- | ----------- |
 | OUT | 0x8000040 (RW) | Control for out0-7 if the GPIO peripheral is selected |
 | IN  | 0x8000044 (R) | Reads the current state of in0-7 |
-| AUDIO_FUNC_SEL | 0x8000050 (RW) | Audio function select for uo7 |
+| AUDIO_FUNC_SEL | 0x8000050 (RW) | Audio function select for uio7 |
 | FUNC_SEL | 0x8000060 - 0x800007F (RW) | Function select for out0-7 |
 
 | Function Select | Peripheral |
@@ -79,10 +80,7 @@ If MTIME is after MTIMECMP (by less than 2^30 microseconds to deal with wrap), t
 | Audio function select | Peripheral |
 | --------------------- | ---------- |
 | 0-3                   | PSRAM B enabled |
-| 4                     | 33 PWL Synth out 7 |
-| 5                     | 11 Pulse Transmitter out 7 |
-| 6                     | 20 PWM out 0 |
-| 7                     | 21 Matt PWM out 1 |
+| 4-7                   | 21 Matt PWM out 7 |
 
 ### UART
 

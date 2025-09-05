@@ -8,7 +8,7 @@ project:
   clock_hz:     64000000       # Clock frequency in Hz (or 0 if not applicable)
 
   # How many tiles your design occupies? A single tile is about 167x108 uM.
-  tiles: "6x2"          # Valid values: 1x1, 1x2, 2x2, 3x2, 4x2, 6x2 or 8x2
+  tiles: "8x2"          # Valid values: 1x1, 1x2, 2x2, 3x2, 4x2, 6x2 or 8x2
 
   # Your top module name must start with "tt_um_". Make it unique by including your github username:
   top_module:  "tt_um_tt_tinyQVb"
@@ -32,9 +32,15 @@ project:
     - "user_peripherals/matt_pwm/matt_pwm.v"
     - "user_peripherals/matt_pwm/pwm_strobe_gen.v"
     - "user_peripherals/matt_pwm/pwm.v"
-    - "user_peripherals/vga_gfx/peripheral.v"
-    - "user_peripherals/vga_gfx/vga_timing.v"
-    - "user_peripherals/vga_gfx/latch_config.v"
+    - "user_peripherals/RV2A03/apu.v"
+    - "user_peripherals/RV2A03/peripheral.v"
+    - "user_peripherals/digital_integrator/integrator_core.v"
+    - "user_peripherals/digital_integrator/peripheral.v"
+    - "user_peripherals/vga/vga_timing.v"
+    - "user_peripherals/vga/peripheral.v"
+    - "user_peripherals/vgascope/vgascope.v"
+    - "user_peripherals/vgascope/vga_timing.v"
+    - "user_peripherals/tqvp_gera_gray.v"
     - "user_peripherals/freq_synth/transpose_matrix.v"
     - "user_peripherals/freq_synth/ring_osc_stage.v"
     - "user_peripherals/freq_synth/ring_osc.v"
@@ -44,6 +50,11 @@ project:
     - "user_peripherals/freq_synth/freq_synth.v"
     - "user_peripherals/freq_synth/peripheral.v"
     - "user_peripherals/stevej_watchdog_window.v"
+    - "user_peripherals/Configurable_crc32/shift_reg.v"
+    - "user_peripherals/Configurable_crc32/crc_wrapper.v"
+    - "user_peripherals/Configurable_crc32/crc32_v.v"
+    - "user_peripherals/Configurable_crc32/bit_reverser.v"
+    - "user_peripherals/fib_rng/fib_rng.v"
     - "tinyQV/cpu/tinyqv.v"
     - "tinyQV/cpu/alu.v"
     - "tinyQV/cpu/core.v"
