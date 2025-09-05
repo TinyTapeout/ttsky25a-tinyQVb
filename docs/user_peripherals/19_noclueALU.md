@@ -12,9 +12,9 @@ You can also include images in this folder and reference them in the markdown. E
 -->
 
 # A teeny tiny ALU that can ADD, SUB, AND and OR two 8 bit numbers
-Why? You might ask. Why not, I would say:)
+"Why?" You might ask. "Why not", I would say:)
 (Even though I am aware that there is a better ALU already inside TinyQV like all other CPUs, I wanted to have my design
-tapped out for the first ever time, and my time (and probably skills) I have chosen the simplest design I could make in 2 days, and thats why.)
+tapped out for the first ever time, and given my time (and probably skills) I chose the simplest design I could make in 2 days-and thats why.)
 
 Author: Aditya Vikram Singh
 
