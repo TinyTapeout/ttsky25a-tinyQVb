@@ -73,7 +73,7 @@ module tqvp_noclueALU (
         4'h1 : data_out = B;
         4'h2 : data_out = OPC;
         4'h3 : data_out = RESULT;
-        default : ;
+        default : data_out = 8'h00;
       endcase
     end
   // above line puts result of operation to data out (from peripheral to cpu) if address is set to 4 bit hex 3 value
