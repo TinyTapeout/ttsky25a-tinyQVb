@@ -8,7 +8,7 @@
 
 
 // ####mportant#### Then edit tt_wrapper.v line 38 and change tqvp_example to your chosen module name.
-module noclueALU (
+module tqvp_noclueALU (
     input         clk,          // Clock - the TinyQV project clock is normally set to 64MHz.
     input         rst_n,        // Reset_n - low to reset.
 
