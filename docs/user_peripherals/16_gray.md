@@ -47,6 +47,8 @@ You can feed any binary number to the data_in input with the data_write set and 
 
 For Gray decoder, You can feed any Gray number to the data_in input with the data_write set and adrress == "2". It will output Binary decoded to data_out and uo_out
 
+Output is driven by 'data_write' and 'rst_n'. Each time you set 'data_write' means a new convertion and output, you can clear out by 'rst_n' or writing any data to 'clear_output' address.
+
 ## External hardware
 
 You can connect output from this peripheral to any input wich can encod/decod gray or need any gray interface for communication.

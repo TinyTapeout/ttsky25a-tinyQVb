@@ -34,7 +34,10 @@ module tqvp_gera_gray_coder (
     //Internal reg
     reg [7:0] bin_reg;
     reg [7:0] gray_reg;
+    reg [3:0] out_flag;
+    
     integer i;
+    
     //Output wires
     wire [7:0] bin_out;
     wire [7:0] gray_out;
@@ -43,18 +46,22 @@ module tqvp_gera_gray_coder (
         if (!rst_n) begin
             bin_reg <= 0;
             gray_reg <= 0;
+            out_flag <= 0;
         end else begin
             if (data_write) begin
                 case (address)
                     clear_output: begin
                         gray_reg <= 0;
                         bin_reg <= 0;
+                        out_flag <= 0;
                     end
                     Bin_2_Gray: begin
                         gray_reg <= data_in;
+                        out_flag <= Bin_2_Gray;
                     end
                     Gray_2_Bin: begin
                         bin_reg <= data_in;
+                        out_flag <= Gray_2_Bin;
                     end
 
                     default: begin 
@@ -88,12 +95,12 @@ module tqvp_gera_gray_coder (
     //Both output are written pmod and data out
 
     // All output pins must be assigned. If not used, assign to 0.
-    assign uo_out  =  (address == Bin_2_Gray) ? gray_out :
-                      (address == Gray_2_Bin) ? bin_out :
+    assign uo_out  =  (out_flag == Bin_2_Gray) ? gray_out :
+                      (out_flag == Gray_2_Bin) ? bin_out :
                       8'h0;
 
-    assign data_out = (address == Bin_2_Gray) ? gray_out :
-                      (address == Gray_2_Bin) ? bin_out :
+    assign data_out = (out_flag == Bin_2_Gray) ? gray_out :
+                      (out_flag == Gray_2_Bin) ? bin_out :
                       8'h0;    
     // List all unused inputs to prevent warnings
     wire _unused = &{ui_in, 1'b0};
