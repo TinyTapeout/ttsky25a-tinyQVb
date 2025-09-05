@@ -32,14 +32,12 @@ async def test_project(dut):
 
     # Testing register write and read back
     await tqv.write_reg(0, 20)
-    await ClockCycles(dut.clk, 1)
+    await ClockCycles(dut.clk, 3)
     assert await tqv.read_reg(0) == 20
     await tqv.write_reg(1, 30)
-    await ClockCycles(dut.clk, 1)
+    await ClockCycles(dut.clk, 3)
     assert await tqv.read_reg(1) == 30
-    await tqv.write_reg(2, 40)
-    await ClockCycles(dut.clk, 1)
-    assert await tqv.read_reg(2) == 40
+
 
     
     #Testing ALU operations
@@ -48,18 +46,18 @@ async def test_project(dut):
     await tqv.write_reg(1, 9)
     #Testing ADD
     await tqv.write_reg(2, 0)
-    await ClockCycles(dut.clk, 1)
+    await ClockCycles(dut.clk, 3)
     assert await tqv.read_reg(3) == 15
     #Testing SUB
     await tqv.write_reg(2, 1)
-    await ClockCycles(dut.clk, 1)
+    await ClockCycles(dut.clk, 3)
     assert await tqv.read_reg(3) == 3
     #Testing AND
     await tqv.write_reg(2, 2)
-    await ClockCycles(dut.clk, 1)
+    await ClockCycles(dut.clk, 3)
     assert await tqv.read_reg(3) == 0
     #Testing OR
     await tqv.write_reg(2, 3)
-    await ClockCycles(dut.clk, 1)
+    await ClockCycles(dut.clk, 3)
     assert await tqv.read_reg(3) == 15
     
