@@ -42,8 +42,8 @@ async def test_project(dut):
     
     #Testing ALU operations
     #Setting the operands
-    await tqv.write_reg(0, 6)
-    await tqv.write_reg(1, 9)
+    await tqv.write_reg(0, 9)
+    await tqv.write_reg(1, 6)
     #Testing ADD
     await tqv.write_reg(2, 0)
     await ClockCycles(dut.clk, 3)
