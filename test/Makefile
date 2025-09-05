@@ -27,9 +27,13 @@ USER_PERIPHERAL_27 =
 USER_PERIPHERAL_28 =
 USER_PERIPHERAL_29 =
 USER_PERIPHERAL_30 = spi
-USER_PERIPHERAL_31 =
+USER_PERIPHERAL_31 = 
 
-.PHONY: clean core prog peri_test_% peri_num_%
+expand_tests = $(foreach num,$(1),$(USER_PERIPHERAL_$(num)))
+PERI_NUMBERS = $(shell seq 2 39)
+ALL_TESTS = $(call expand_tests,$(PERI_NUMBERS))
+
+.PHONY: clean core prog peri_test_% peri_num_% $(ALL_TESTS)
 
 %-results.xml:
 	@make -f test_$*.mk clean
@@ -46,6 +50,8 @@ peri-%.xml:
 	@mv sim_build/rtl/tb.fst $*-rtl.fst || true
 	@mv sim_build/gl/tb.fst $*-gl.fst || true
 
+$(ALL_TESTS): %: peri-%.xml
+
 clean:
 	rm *results.xml peri-*.xml *.fst sim_build/rtl/tb.fst sim_build/gl/tb.fst || true
 
@@ -55,10 +61,6 @@ core: clean basic-results.xml
 prog: clean prog-results.xml
 	@cat *results.xml > results.xml
 
-peri_test_%: peri-%.xml
-	@:
-
 .SECONDEXPANSION:
-peri_num_%: clean $$(addprefix peri_test_,$$($$(addprefix USER_PERIPHERAL_,$$*)))
+peri_num_%: clean $$(call expand_tests,%)
 	@if [ "$(USER_PERIPHERAL_$*)" != "" ]; then cat peri-*.xml; else echo '<testsuites name="results" />'; fi > results.xml
-
