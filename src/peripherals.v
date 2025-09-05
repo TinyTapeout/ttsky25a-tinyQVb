@@ -222,7 +222,7 @@ module tinyQV_peripherals #(parameter CLOCK_MHZ=64) (
     // --------------------------------------------------------------------- //
     // Full interface peripherals
 
-    tqvp_rebelmike_vga_gfx i_user_peri04(
+    tqvp_fjpolo_rv2a03 i_user_peri04(
         .clk(clk),
         .rst_n(rst_n),
 
@@ -260,7 +260,8 @@ module tinyQV_peripherals #(parameter CLOCK_MHZ=64) (
         .user_interrupt(user_interrupts[5])
     );
 
-    tqvp_full_empty i_user_peri06 (
+
+    tqvp_crc_wrapper  i_user_peri06 (
         .clk(clk),
         .rst_n(rst_n),
 
@@ -279,7 +280,7 @@ module tinyQV_peripherals #(parameter CLOCK_MHZ=64) (
         .user_interrupt(user_interrupts[6])
     );
 
-    tqvp_full_empty i_user_peri07 (
+    tqvp_cattuto_vgascope i_user_peri07 (
         .clk(clk),
         .rst_n(rst_n),
 
@@ -374,7 +375,7 @@ module tinyQV_peripherals #(parameter CLOCK_MHZ=64) (
         .user_interrupt(user_interrupts[11])
     );
 
-    tqvp_full_empty i_user_peri12 (
+    tqvp_rejunity_vga i_rejunity_vga12 (
         .clk(clk),
         .rst_n(rst_n),
 
@@ -572,7 +573,7 @@ module tinyQV_peripherals #(parameter CLOCK_MHZ=64) (
         .data_out(data_from_simple_peri[7])
     );
 
-    tqvp_byte_empty i_user_simple08 (
+    tqvp_integrator i_user_simple08 (
         .clk(clk),
         .rst_n(rst_n),
 

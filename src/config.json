@@ -13,7 +13,7 @@
 
   "//": "PL_TARGET_DENSITY_PCT - You can increase this if Global Placement fails with error GPL-0302.",
   "//": "Users have reported that values up to 80 worked well for them.",
-  "PL_TARGET_DENSITY_PCT": 70,
+  "PL_TARGET_DENSITY_PCT": 60,
 
   "//": "CLOCK_PERIOD - Increase this in case you are getting setup time violations.",
   "//": "The value is in nanoseconds, so 20ns == 50MHz.",
@@ -41,10 +41,11 @@
 
   "//": "Routing tweaks",
   "DESIGN_REPAIR_MAX_SLEW_PCT": 25,
-  "DESIGN_REPAIR_REMOVE_BUFFERS": 1,
   "RUN_HEURISTIC_DIODE_INSERTION": 1,
   "RUN_ANTENNA_REPAIR": 1,
   "HEURISTIC_ANTENNA_THRESHOLD": 200,
+  "GRT_ANTENNA_ITERS": 5,
+  "GRT_ANTENNA_MARGIN": 20,
 
   "//": "If you need a custom clock configuration, read the following documentation first:",
   "//": "https://tinytapeout.com/faq/#how-can-i-map-an-additional-external-clock-to-one-of-the-gpios",
