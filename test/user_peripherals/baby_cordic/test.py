@@ -13,7 +13,7 @@ import random
 # When submitting your design, change this to the peripheral number
 # in peripherals.v.  e.g. if your design is i_user_peri05, set this to 5.
 # The peripheral number is not used by the test harness.
-PERIPHERAL_NUM = 8
+PERIPHERAL_NUM = 10
 
 def float_to_spi_word(x: float) -> int:
     if math.isnan(x):
