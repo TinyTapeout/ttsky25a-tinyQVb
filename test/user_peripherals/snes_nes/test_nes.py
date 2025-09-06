@@ -5,13 +5,23 @@ import random
 from random import randint
 import cocotb
 from cocotb import logging
-from cocotb.triggers import RisingEdge
+from cocotb.triggers import RisingEdge, Edge
 
 from cocotb.clock import Clock
 from cocotb.triggers import ClockCycles, Timer, RisingEdge, FallingEdge
 from tqv import TinyQV
 
+async def posedge(vector, bit):
+    prev = (int(vector) >> bit) & 1
+    while True:
+        await Edge(vector)            # wake on any change to the bus
+        cur = (int(vector) >> bit) & 1
+        if prev == 0 and cur == 1:
+            return                    # rising edge detected
+        prev = cur 
+
 class NES_Controller:
+    
 
     # NES controller button order: A, B, Select, Start, Up, Down, Left, Right
     BUTTONS = ["A", "B", "Select", "Start", "Up", "Down", "Left", "Right"]
@@ -58,7 +68,7 @@ class NES_Controller:
     @cocotb.coroutine
     async def nes_latch(self):
         while True:
-            await RisingEdge(self.dut.uo_out[6])
+            await posedge(self.dut.uo_out, 6)
             self.latch()
 
     def latch(self):
@@ -73,7 +83,7 @@ class NES_Controller:
     @cocotb.coroutine
     async def nes_shift(self):
         while True:
-            await RisingEdge(self.dut.uo_out[7])
+            await posedge(self.dut.uo_out, 7)
             data_val = self.shift()
             self.log.info(f"shifting nes clk: output: {data_val}")
             self.dut.ui_un[1].value = data_val
