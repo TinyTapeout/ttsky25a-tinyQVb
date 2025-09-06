@@ -693,4 +693,19 @@ module tinyQV_peripherals #(parameter CLOCK_MHZ=64) (
         .data_out(data_from_simple_peri[15])
     );
 
+    tqvp_pac_rr i_user_simple16 (
+        .clk(clk),
+        .rst_n(rst_n),
+
+        .ui_in(ui_in),
+        .uo_out(uo_out_from_simple_peri[16]),
+
+        .address(addr_in[3:0]),
+
+        .data_write((data_write_n != 2'b11) & peri_simple[16]),
+        .data_in(data_in[7:0]),
+
+        .data_out(data_from_simple_peri[16])
+    );
+
 endmodule
