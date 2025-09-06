@@ -484,7 +484,7 @@ module tinyQV_peripherals #(parameter CLOCK_MHZ=64) (
         .data_out(data_from_simple_peri[1])
     );
 
-    tqvp_byte_empty i_user_simple02 (
+    tqvp_nes_snes_controller kingslanding_snes (
         .clk(clk),
         .rst_n(rst_n),
 
@@ -678,11 +678,11 @@ module tinyQV_peripherals #(parameter CLOCK_MHZ=64) (
         .data_out(data_from_simple_peri[14])
     );
 
-    tqvp_byte_example i_user_simple15 (
+    tqvp_nes_snes_controller kingslanding_nes_25(
         .clk(clk),
         .rst_n(rst_n),
 
-        .ui_in(ui_in),
+        .ui_in(ui_in_raw),
         .uo_out(uo_out_from_simple_peri[15]),
 
         .address(addr_in[3:0]),
@@ -692,5 +692,6 @@ module tinyQV_peripherals #(parameter CLOCK_MHZ=64) (
 
         .data_out(data_from_simple_peri[15])
     );
+
 
 endmodule
