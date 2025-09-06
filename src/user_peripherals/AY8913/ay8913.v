@@ -7,8 +7,8 @@
 //
 // However this implementation uses syncronous reset and single edge of the clock.
 
-module ay8913 #(parameter CHANNEL_OUTPUT_BITS = 6,
-                parameter  MASTER_OUTPUT_BITS = 7
+module ay8913 #(parameter CHANNEL_OUTPUT_BITS = 7,
+                parameter  MASTER_OUTPUT_BITS = 8
 ) (
     input  wire       clk,
     input  wire       rst_n,
@@ -268,28 +268,62 @@ module ay8913 #(parameter CHANNEL_OUTPUT_BITS = 6,
             pwm_out_reg <= pwm_out_reg | pwm_out_pipe;
     end
 
-    wire [CHANNEL_OUTPUT_BITS-1:0] master_pipe;
-    attenuation #(.VOLUME_BITS(CHANNEL_OUTPUT_BITS)) attenuation_pipe (
-        .in(1'b1),
-        .control(
+    wire [3:0] control_pipe = 
             clk_counter[1:0] == 2'b00 ? 4'd0 :
             clk_counter[1:0] == 2'b01 ? volume_A_reg :
             clk_counter[1:0] == 2'b10 ? volume_B_reg :
-                                        volume_C_reg),
-        .out(master_pipe)
-        );
+                                        volume_C_reg;
+
+    // wire [CHANNEL_OUTPUT_BITS-1:0] master_pipe;
+    // attenuation #(.VOLUME_BITS(CHANNEL_OUTPUT_BITS)) attenuation_pipe (
+    //     .in(1'b1),
+    //     .control(control_pipe),
+    //     .out(master_pipe)
+    //     );
+    // wire pwm_out_pipe;
+    // reg pwm_out_reg;
+    // // @TODO: divide master by 3 instead of 2
+    // localparam MASTER_ACCUMULATOR_BITS = CHANNEL_OUTPUT_BITS + 1;
+    // pwm_ay8913 #(.VALUE_BITS(MASTER_ACCUMULATOR_BITS)) pwm_master_pipe (
+    //     .clk(clk),
+    //     .reset(reset),
+    //     .value({1'b0, master_pipe}),
+    //     .out(pwm_out_pipe)
+    //     );
+
+    wire [7:0] volume_sq = control_pipe * control_pipe;
     wire pwm_out_pipe;
     reg pwm_out_reg;
-    pwm_ay8913 #(.VALUE_BITS(MASTER_ACCUMULATOR_BITS)) pwm_master_pipe (
+    pwm_ay8913 #(.VALUE_BITS(8)) pwm_master_pipe (
         .clk(clk),
         .reset(reset),
-        .value({1'b0, master_pipe}),
+        .value(volume_sq),
         .out(pwm_out_pipe)
         );
 
-    // // @TODO: divide master by 3 instead of 2
-    localparam MASTER_ACCUMULATOR_BITS = CHANNEL_OUTPUT_BITS + 1;
+    // PWM OUTPUT VALIDATION CODE
+    // wire [10:0] master =    volume_A_reg * volume_A_reg +
+    //                         volume_B_reg * volume_B_reg +
+    //                         volume_C_reg * volume_C_reg;
 
+    // reg [10:0] test_pwm;
+    // always @(posedge clk) begin
+    //     if (reset || clk_counter[7:0] == 0)
+    //         test_pwm <= 0;
+    //     else
+    //         test_pwm <= test_pwm + pwm_out_pipe;//pwm_out_reg;
+    // end
+
+    // reg [10:0] test_pwm2;
+    // always @(posedge clk) begin
+    //     if (reset || clk_counter[7:0] == 0)
+    //         test_pwm2 <= 0;
+    //     else
+    //         test_pwm2 <= test_pwm + pwm_out_reg;
+    // end
+
+
+    // OLD
     // wire [CHANNEL_OUTPUT_BITS-1:0] volume_A, volume_B, volume_C;
     // attenuation #(.VOLUME_BITS(CHANNEL_OUTPUT_BITS)) attenuation_A ( // @TODO: rename to amplitude to match docs
     //     .in(channel_A),

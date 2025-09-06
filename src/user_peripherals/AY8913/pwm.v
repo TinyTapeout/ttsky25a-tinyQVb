@@ -16,13 +16,13 @@ module pwm_ay8913 #( parameter VALUE_BITS = 8 ) (
     reg [ACCUMULATOR_BITS-1:0] accumulator;
 
     always @(posedge clk) begin
-        // if (reset) begin
-        //     accumulator <= 0;
-        // end else begin
+        if (reset) begin
+            accumulator <= 0;
+        end else begin
             // greater the value, the more often accumulator overflows
             // every time the accumulator overflows, PDM outputs 1
             accumulator <= accumulator[VALUE_BITS-1:0] + value;
-        // end
+        end
     end
 
     assign out = accumulator[ACCUMULATOR_BITS-1]; // an overflow bit of the accumulator is the output of PDM
