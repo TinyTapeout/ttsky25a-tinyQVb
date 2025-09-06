@@ -15,7 +15,7 @@ You can also include images in this folder and reference them in the markdown. E
 
 Author: Kwashie Andoh, James Ashie Kotey
 
-Peripheral index: nn
+Peripheral index: 31
 
 ## What it does
 
