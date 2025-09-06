@@ -12,10 +12,10 @@ from cocotb.triggers import ClockCycles, Timer, RisingEdge, FallingEdge
 from tqv import TinyQV
 
 async def posedge(vector, bit):
-    prev = (int(vector) >> bit) & 1
+    prev = vector[bit].value
     while True:
         await Edge(vector)            # wake on any change to the bus
-        cur = (int(vector) >> bit) & 1
+        cur = vector[bit].value 
         if prev == 0 and cur == 1:
             return                    # rising edge detected
         prev = cur 
@@ -77,7 +77,7 @@ class NES_Controller:
         self.shift_index = 0
         data_val = self.shift_register[self.shift_index]
         self.log.info(f"latching nes latch: output: {data_val}")
-        self.dut.ui_un[1].value = data_val
+        self.dut.ui_in[1].value = data_val
 
     # model the NES shift behavior
     @cocotb.coroutine
@@ -86,7 +86,7 @@ class NES_Controller:
             await posedge(self.dut.uo_out, 7)
             data_val = self.shift()
             self.log.info(f"shifting nes clk: output: {data_val}")
-            self.dut.ui_un[1].value = data_val
+            self.dut.ui_in[1].value = data_val
 
     def shift(self):
         # Return current bit and advance shift register
@@ -116,6 +116,7 @@ async def test_nes(dut):
     tqv = TinyQV(dut, PERIPHERAL_NUM)
     await tqv.reset()
 
+    # press a random button
     pressed_button = nes.press()
 
     await ClockCycles(dut.clk, 10)
@@ -138,5 +139,6 @@ async def test_nes(dut):
         "Right": 0b00000001
     }
 
+    # read value from reg 0
     dut._log.info(f"Read value from std_buttons: {button_map[pressed_button]:08b}")
     assert await tqv.read_reg(0) == button_map[pressed_button]
