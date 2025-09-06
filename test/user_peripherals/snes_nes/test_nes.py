@@ -58,7 +58,7 @@ class NES_Controller:
     @cocotb.coroutine
     async def nes_latch(self):
         while True:
-            await RisingEdge(self.dut.nes_latch)
+            await RisingEdge(self.dut.uo_out[6])
             self.latch()
 
     def latch(self):
@@ -67,16 +67,16 @@ class NES_Controller:
         self.shift_index = 0
         data_val = self.shift_register[self.shift_index]
         self.log.info(f"latching nes latch: output: {data_val}")
-        self.dut.nes_data.value = data_val
+        self.dut.ui_un[1].value = data_val
 
     # model the NES shift behavior
     @cocotb.coroutine
     async def nes_shift(self):
         while True:
-            await RisingEdge(self.dut.nes_clk)
+            await RisingEdge(self.dut.uo_out[7])
             data_val = self.shift()
             self.log.info(f"shifting nes clk: output: {data_val}")
-            self.dut.nes_data.value = data_val
+            self.dut.ui_un[1].value = data_val
 
     def shift(self):
         # Return current bit and advance shift register
@@ -91,63 +91,32 @@ class NES_Controller:
 # When submitting your design, change this to 16 + the peripheral number
 PERIPHERAL_NUM = 41
 
-expected_buttons_pressed_list = []
 
-async def nes_sequence(dut, nes, tqv, num_presses=10):
+@cocotb.test()
+async def test_nes(dut):
+    dut._log.info("Start")
+    nes = NES_Controller(dut)
+    # Set the clock period to 16 ns (~64 MHz)
+    clock = Clock(dut.clk, 16, units="ns")
+    cocotb.start_soon(clock.start())
 
-    buttons = ["A", "B", "Select", "Start", "Up", "Down", "Left", "Right"]
+    dut._log.info("Test project behavior")
+    cocotb.start_soon(nes.model_nes())
 
-    print(f"pressing {num_presses} buttons..")
-    
-    # Hold for start time
-    start_delay = randint(0,1)
-    await Timer(start_delay, units="ns")
+    tqv = TinyQV(dut, PERIPHERAL_NUM)
+    await tqv.reset()
 
-    pressed = set()
-    pressed_buttons = []
+    pressed_button = nes.press()
 
-    for _ in range(num_presses):
-        
-        # Choose 1 or 2 unique buttons to press
-        num_buttons = randint(0, 2)
-        
-        if len(expected_buttons_pressed_list) < 2:
-            # Add a one or two or zero buttons that are not already pressed
-            if len(expected_buttons_pressed_list) < 1:
-                for _ in range(num_buttons):
-                    available_buttons = [b for b in buttons if b not in pressed]
-                    if available_buttons:
-                            pressed.add(buttons.index(available_buttons[randint(0, len(available_buttons)-1)]))
-                    pressed_buttons = [buttons[i] for i in pressed]
-            # Add a one or zero buttons that are not already pressed
-            else:
-                if randint(1,2) == 2:
-                    available_buttons = [b for b in buttons if b not in pressed]
-                    if available_buttons:
-                        pressed.add(buttons.index(available_buttons[randint(0, len(available_buttons)-1)]))
-                        pressed_buttons = [buttons[i] for i in pressed]
-            
-        for button in pressed_buttons:
-            nes.press(button)
+    await ClockCycles(dut.clk, 10)
 
-        await RisingEdge(dut.nes_latch)
-        # print(f"adding button {pressed_buttons} to list.")
-        
-        for button in pressed_buttons:
-            expected_buttons_pressed_list.append(button)
+    # wait for a full timer cycle for the input to be registerd
+    await Timer(randint(400, 800), units="us")
 
-        # Hold for random time
-        hold_time = randint(50, 500)
-        await Timer(hold_time, units="us")
+    # The following assertion is just an example of how to check the output values.
+    # Map pressed_button to a binary value in descending powers of 2 from 128
 
-        # Randomly release 1 or both buttons
-        num_release = randint(1, max(len(pressed_buttons),1))
-        
-        for button in pressed_buttons[:num_release]:
-            nes.release(button)
-            expected_buttons_pressed_list.remove(button)
-        
-async def check_data(dut, tqv):
+    # Active high output
     button_map = {
         "A":     0b10000000,
         "B":     0b01000000,
@@ -159,39 +128,5 @@ async def check_data(dut, tqv):
         "Right": 0b00000001
     }
 
-    # Wait for the complete transmission cycle
-    
-    # If no button was queued, skip this cycle
-    if len(expected_buttons_pressed_list) == 0:
-        return
-
-    expected_data_out = 0
-    
-    for b in expected_buttons_pressed_list:
-        expected_data_out |= button_map[b]
-
-    # Small random wait to simulate async timing
-    await Timer(randint(10, 50), units="ns")
-
-    val = await tqv.read_reg(0)
-    dut._log.info(f"Async check: std_buttons={val:08b}, expected={expected_data_out:08b}")
-
-    assert val == expected_data_out , f"Mismatch for {expected_buttons_pressed_list}"
-
-@cocotb.test()
-async def test_nes(dut):
-    dut._log.info("Start")
-    tqv = TinyQV(dut, PERIPHERAL_NUM)
-    nes = NES_Controller(dut)
-    # Set the clock period to 16 ns (~64 MHz)
-    clock = Clock(dut.clk, 16, units="ns")
-    cocotb.start_soon(clock.start())
-
-    dut._log.info("Test project behavior")
-    cocotb.start_soon(nes.model_nes())
-    await tqv.reset()
-    
-    await nes_sequence(dut, nes, tqv, num_presses=1)
-
-    await ClockCycles(dut.clk, 10)
-
+    dut._log.info(f"Read value from std_buttons: {button_map[pressed_button]:08b}")
+    assert await tqv.read_reg(0) == button_map[pressed_button]
