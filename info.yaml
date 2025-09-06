@@ -67,6 +67,13 @@ project:
     - "tinyQV/cpu/latch_reg.v"
     - "tinyQV/cpu/time.v"
     - "tinyQV/peri/uart/uart_tx.v"
+    - "user_peripherals/baby_cordic/tqvp_baby_cordic.v"
+    - "user_peripherals/baby_cordic/cordic.v"
+    - "user_peripherals/baby_cordic/cordic_stage.v"
+    - "user_peripherals/baby_cordic/fixed_to_fp.v"
+    - "user_peripherals/baby_cordic/fp_to_fixed.v"
+    - "user_peripherals/baby_cordic/cordic_instr_top.v"
+    - "user_peripherals/baby_cordic/atan.v"
 
 
 # The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
