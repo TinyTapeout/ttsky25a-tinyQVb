@@ -5,7 +5,7 @@ from cocotb.clock import Clock
 from cocotb.triggers import ClockCycles, RisingEdge
 from tqv import TinyQV
 
-PERIPHERAL_NUM = 32  # 16 + 16
+PERIPHERAL_NUM = 25  # 9 + 16
 
 # ------------------
 class ArbiterTB:
