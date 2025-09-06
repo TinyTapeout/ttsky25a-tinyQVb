@@ -215,7 +215,7 @@ module tqvp_rejunity_vga (
         .enable_interrupt_on_hblank(vga_ei_hblank),
         .enable_interrupt_on_vblank(vga_ei_vblank),
         .narrow_960(vga_960_vs_1024),
-        .extra_vblank_lines_for_64mhz(vga_63_5mhz),
+        .extra_vblank_lines_for_64mhz(~vga_63_5mhz),
         .x(vga_x),
         .y(vga_y),
         .hsync(vga_hsync),
