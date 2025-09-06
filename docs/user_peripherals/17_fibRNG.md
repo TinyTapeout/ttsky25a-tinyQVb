@@ -119,7 +119,9 @@ FibRNG can execute the commands from the following table.  To execute them, writ
 | `Advance`  | `0b00000011`  | Compute the next random bit / $r$                                    |
 | `NOP`      | others        | Does not do anything                                                 |
 
-**Note:** The register addresses are shown in binary, *not*, hex!
+**Note:** Starting also immediately advances the state in the very same clock cycle!
+
+**Note:** The values are shown in binary, *not*, hex!
 
 ### Configuration
 
