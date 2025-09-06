@@ -66,6 +66,8 @@ project:
     - "user_peripherals/AY8913/peripheral.v"
     - "user_peripherals/snes_nes/snes_nes_rec_peripheral.v"
     - "user_peripherals/snes_nes/Receiver_Core.v"
+    - "user_peripherals/pwl_synth/pwl_synth.sv"
+    - "user_peripherals/pwl_synth/pwl_synth_memory.sv"
     - "tinyQV/cpu/tinyqv.v"
     - "tinyQV/cpu/alu.v"
     - "tinyQV/cpu/core.v"

@@ -1,10 +1,10 @@
 USER_PERIPHERAL_2 = uart
 USER_PERIPHERAL_3 = game_pmod
-USER_PERIPHERAL_4 = 
+USER_PERIPHERAL_4 = RV2A03.test
 USER_PERIPHERAL_5 = freq_synth.test
 USER_PERIPHERAL_6 = Configurable_crc32.test
 USER_PERIPHERAL_7 = vgascope.test
-USER_PERIPHERAL_8 = RV2A03.test
+USER_PERIPHERAL_8 = pwl_synth.test
 USER_PERIPHERAL_9 = test_stevej_watchdog_window
 USER_PERIPHERAL_10 =
 USER_PERIPHERAL_11 =
