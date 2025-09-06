@@ -691,6 +691,7 @@ module tinyQV_peripherals #(parameter CLOCK_MHZ=64) (
         .data_in(data_in[7:0]),
 
         .data_out(data_from_simple_peri[15])
+    );
 
 
 endmodule
