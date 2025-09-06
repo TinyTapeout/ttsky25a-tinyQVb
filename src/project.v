@@ -18,6 +18,7 @@ module tt_um_tt_tinyQVb #(parameter CLOCK_MHZ=64) (
 
     // Address to peripheral map
     localparam PERI_NONE = 4'h0;
+    localparam PERI_ID = 4'h2;
     localparam PERI_GPIO_OUT_SEL = 4'h3;
     localparam PERI_DEBUG_UART = 4'h6;
     localparam PERI_DEBUG_UART_STATUS = 4'h7;
@@ -193,6 +194,7 @@ module tt_um_tt_tinyQVb #(parameter CLOCK_MHZ=64) (
     // Read data
     always @(*) begin
         case (connect_peripheral)
+            PERI_ID:          data_from_read = {24'h0, 8'h42};  // B instance
             PERI_GPIO_OUT_SEL:data_from_read = {24'h0, gpio_out_sel, 6'h0};
             PERI_DEBUG_UART_STATUS: data_from_read = {31'h0, debug_uart_tx_busy};
             PERI_TIME_LIMIT:  data_from_read = {25'h0, time_limit, 2'b11};
