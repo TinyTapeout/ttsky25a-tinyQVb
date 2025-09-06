@@ -11,7 +11,7 @@ from cocotb.triggers import ClockCycles, Timer, RisingEdge, FallingEdge
 from tqv import TinyQV
 
 # When submitting your design, change this to 16 + the peripheral number
-PERIPHERAL_NUM = 16 
+PERIPHERAL_NUM = 18
 
 expected_buttons_pressed_list = []
 
