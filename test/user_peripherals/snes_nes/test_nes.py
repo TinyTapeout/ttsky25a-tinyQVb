@@ -11,6 +11,8 @@ from cocotb.clock import Clock
 from cocotb.triggers import ClockCycles, Timer, RisingEdge, FallingEdge
 from tqv import TinyQV
 
+PERIPHERAL_NUM = 31
+
 async def posedge(vector, bit):
     prev = vector[bit].value
     while True:
@@ -99,7 +101,6 @@ class NES_Controller:
             return 1
 
 # When submitting your design, change this to 16 + the peripheral number
-PERIPHERAL_NUM = 41
 
 
 @cocotb.test()
