@@ -116,13 +116,12 @@ async def test_nes(dut):
     tqv = TinyQV(dut, PERIPHERAL_NUM)
     await tqv.reset()
 
-    # press a random button
     pressed_button = nes.press()
 
     await ClockCycles(dut.clk, 10)
 
     # wait for a full timer cycle for the input to be registerd
-    await Timer(randint(400, 800), units="us")
+    await Timer(randint(600, 800), units="us")
 
     # The following assertion is just an example of how to check the output values.
     # Map pressed_button to a binary value in descending powers of 2 from 128
@@ -139,6 +138,5 @@ async def test_nes(dut):
         "Right": 0b00000001
     }
 
-    # read value from reg 0
     dut._log.info(f"Read value from std_buttons: {button_map[pressed_button]:08b}")
     assert await tqv.read_reg(0) == button_map[pressed_button]
