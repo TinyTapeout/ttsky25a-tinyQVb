@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Your Name
+ * Copyright (c) 2025 ReJ aka Renaldas Zioma
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -33,22 +33,8 @@ module tqvp_rejunity_ay8913 (
         .write(data_write),
         .latched_register(address),
         .data(data_in),
-        // .master_clock_control(master_clock_control),
-        .master_clock_control(2'b10),
-        // .master_out(data_out),
         .pwm_out(pwm_out)
     );
-
-    // reg [1:0] master_clock_control;
-    // always @(posedge clk) begin
-    //     if (!rst_n) begin
-    //         master_clock_control <= 2'b10; // default: div 256 for 64 MHz
-    //     end else begin
-    //         if (address == 4'hF) begin
-    //             if (data_write) master_clock_control <= data_in[1:0];
-    //         end
-    //     end
-    // end
 
     assign data_out = 0;
     assign uo_out = {8{pwm_out}};

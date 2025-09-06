@@ -55,30 +55,8 @@ module noise #( parameter LFSR_BITS = 17, LFSR_TAP0 = 0, LFSR_TAP1 = 3, paramete
     wire lfsr_shift_in = (lfsr[LFSR_TAP0] ^ lfsr[LFSR_TAP1]) | is_lfsr_zero;
 
     always @(posedge clk) begin
-        // if (reset)
-        //     lfsr <= 0;
-        // else
-            if (trigger_edge)
-                lfsr <= {lfsr_shift_in, lfsr[LFSR_BITS-1:1]};
+        if (trigger_edge)
+            lfsr <= {lfsr_shift_in, lfsr[LFSR_BITS-1:1]};
     end
-
-    // always @(posedge clk) begin
-    //     if (reset) begin
-    //         lfsr <= 0;
-    //         previous_trigger <= 0;
-    //     end else begin
-    //         if (trigger_edge)
-    //             lfsr <= {lfsr_shift_in, lfsr[LFSR_BITS-1:1]};
-    //         previous_trigger <= trigger;
-    //     end
-    // end
-
-    // always @(posedge lfsr_shift_trigger) begin
-    //     if (reset)      // @TODO: reset should happen on the master clock
-    //         lfsr <= 0;
-    //     else
-    //         lfsr <= {lfsr_shift_in, lfsr[LFSR_BITS-1:1]};
-    // end
-
     assign out = ~lfsr[0];
 endmodule

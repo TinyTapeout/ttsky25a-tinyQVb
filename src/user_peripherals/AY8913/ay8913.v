@@ -16,9 +16,7 @@ module ay8913 #(parameter CHANNEL_OUTPUT_BITS = 6,
     input  wire       write,
     input  wire [3:0] latched_register,
     input  wire [7:0] data,
-    input  wire [1:0] master_clock_control,
 
-    // output wire [7:0] master_out,
     output wire       pwm_out
 );
     wire reset = ! rst_n;
@@ -26,20 +24,6 @@ module ay8913 #(parameter CHANNEL_OUTPUT_BITS = 6,
     reg [$clog2(256)-1:0] clk_counter;
     wire clk_master_strobe = clk_counter[$clog2(256)-1:0] == 0; // div 256, running 64Mhz
 
-    // reg clk_master_strobe;
-    // always @(*) begin
-    //     case(master_clock_control[1:0])
-    //         2'b01:  clk_master_strobe = 1;                                  // no div, counters for tone & noise are always enabled
-    //                                                                         // useful to speedup record.py
-    //         2'b10:  clk_master_strobe = clk_counter[$clog2(256)-1:0] == 0;  // div 256, running 64Mhz
-    //         default:
-    //                 clk_master_strobe = clk_counter[$clog2(8)-1:0] == 0;    // div  8, for standard AY-3-819x 
-    //                                                                         // running on 1.7 MHz .. 2 MHz frequencies
-    //     endcase
-    // end
-
-    localparam REGISTERS = 14;
-    // reg [7:0] register[REGISTERS-1:0];  // 82 bits are used out of 128
     reg restart_envelope;
 
     always @(posedge clk) begin
@@ -322,51 +306,7 @@ module ay8913 #(parameter CHANNEL_OUTPUT_BITS = 6,
     //     .control(envelope_C ? envelope: amplitude_C),
     //     .out(volume_C)
     //     );
-
-    // localparam MASTER_MAX_OUTPUT_VOLUME = {MASTER_OUTPUT_BITS{1'b1}};
-    // wire [MASTER_ACCUMULATOR_BITS-1:0] master;
-    // wire master_overflow;
-    // assign { master_overflow, master } = volume_A + volume_B + volume_C; // sum all channels
-    // // assign uo_out[MASTER_OUTPUT_BITS-1:0] = 
-    // //     (master_overflow == 0) ? master[MASTER_ACCUMULATOR_BITS-1 -: MASTER_OUTPUT_BITS] :  // pass highest MASTER_OUTPUT_BITS to the DAC output pins
-    // //                              MASTER_MAX_OUTPUT_VOLUME;                                  // ALSO prevent value wraparound in the master output
-
-    // // PWM outputs
-    // // pwm_ay8913 #(.VALUE_BITS(CHANNEL_OUTPUT_BITS)) pwm_A (
-    // //     .clk(clk),
-    // //     .reset(reset),
-    // //     .value(volume_A),
-    // //     .out(uio_out[4])
-    // //     );
-
-    // // pwm_ay8913 #(.VALUE_BITS(CHANNEL_OUTPUT_BITS)) pwm_B (
-    // //     .clk(clk),
-    // //     .reset(reset),
-    // //     .value(volume_B),
-    // //     .out(uio_out[5])
-    // //     );
-
-    // // pwm_ay8913 #(.VALUE_BITS(CHANNEL_OUTPUT_BITS)) pwm_C (
-    // //     .clk(clk),
-    // //     .reset(reset),
-    // //     .value(volume_C),
-    // //     .out(uio_out[6])
-    // //     );
-
-    // wire pwm_out_old;
-    // pwm_ay8913 #(.VALUE_BITS(MASTER_ACCUMULATOR_BITS)) pwm_master (
-    //     .clk(clk),
-    //     .reset(reset),
-    //     .value(master),
-    //     .out(pwm_out_old)
-    //     );
     
     // assign pwm_out = pwm_out_old;
-    assign pwm_out = pwm_out_reg;
-    // assign pwm_out = pwm_out_pipe; // TODO: up the volume by x4!
-    // assign master_out = 0;
-
-    // assign master_out[7:2] = 0;//master[MASTER_ACCUMULATOR_BITS-1 -: 6];
-    // assign master_out[1:0] = 0;
-    
+    assign pwm_out = pwm_out_reg;    
 endmodule
