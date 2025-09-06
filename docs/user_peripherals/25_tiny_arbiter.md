@@ -23,27 +23,27 @@ Tiny Arbiter is a weighted round-robin arbiter with configurable per-master weig
 
 Document the registers that are used to interact with your peripheral
 
-| Address | Name         |  Access | Description                                              |
+| Address | Name     |  Access | Description                                                      |
 
-| ------- | ------------ | ------- |----------------------------------------------------------|
+| ------- | -------- | ------- |------------------------------------------------------------------|
 
-| 0x0     | N/A      | —   | Unused (reads 0).                                                |
+| 0x0     | N/A      | —       | Unused (reads 0).                                                |
 
-| 0x1     | N/A      | —   | Unused (reads 0).                                                |
+| 0x1     | N/A      | —       | Unused (reads 0).                                                |
 
-| 0x2     | WEIGHT0  | R/W | Requester 0 weight (1..7 recommended; 0 allowed = “off/lowest”). |
+| 0x2     | WEIGHT0  | R/W     | Requester 0 weight (1..7 recommended; 0 allowed = “off/lowest”). |
 
-| 0x3     | WEIGHT1  | R/W | Requester 1 weight.                                              |
+| 0x3     | WEIGHT1  | R/W     | Requester 1 weight.                                              |
 
-| 0x4     | WEIGHT2  | R/W | Requester 2 weight.                                              |
+| 0x4     | WEIGHT2  | R/W     | Requester 2 weight.                                              |
 
-| 0x5     | WEIGHT3  | R/W | Requester 3 weight.                                              |
+| 0x5     | WEIGHT3  | R/W     | Requester 3 weight.                                              |
 
-| 0x6–0xD | N/A      | —   | Unused (reads 0).                                                |
+| 0x6–0xD | N/A      | —       | Unused (reads 0).                                                |
 
-| 0xE     | STATUS0  | R   | Snapshot of internal state. `busy=1` when arbiter not in IDLE.   |
+| 0xE     | STATUS0  | R       | Snapshot of internal state. `busy=1` when arbiter not in IDLE.   |
 
-| 0xF     | STATUS1  | R   | One-hot grant vector of current winner (or 0 if none).           |
+| 0xF     | STATUS1  | R       | One-hot grant vector of current winner (or 0 if none).           |
 
                                                     
 
