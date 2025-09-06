@@ -588,7 +588,7 @@ module tinyQV_peripherals #(parameter CLOCK_MHZ=64) (
         .data_out(data_from_simple_peri[8])
     );
 
-    tqvp_byte_empty i_user_simple09 (
+    tqvp_pac_rr i_user_simple09 (
         .clk(clk),
         .rst_n(rst_n),
 
