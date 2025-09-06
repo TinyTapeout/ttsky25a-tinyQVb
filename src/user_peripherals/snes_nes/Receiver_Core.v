@@ -428,6 +428,55 @@ module NES_Reciever (
 
 endmodule
 
+
+/*
+ * Copyright (c) 2025 Pat Deegan
+ * https://psychogenic.com
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+// driver included in gamepad pmod
+
+module gamepad_pmod_decoder (
+    input wire [11:0] data_reg,
+    output wire b,
+    output wire y,
+    output wire select,
+    output wire start,
+    output wire up,
+    output wire down,
+    output wire left,
+    output wire right,
+    output wire a,
+    output wire x,
+    output wire l,
+    output wire r,
+    output wire is_present
+);
+
+  // When the controller is not connected, the data register will be all 1's
+  wire reg_empty = (data_reg == 12'hfff);
+  assign is_present = reg_empty ? 0 : 1'b1;
+
+  // Fix issue with PMOD: irregular/unreliable data for every other latch cycle
+  wire [11:0] button_data = reg_empty ? 12'b0 : data_reg;
+  
+  // Count number of pressed buttons (count 1's in button_data)
+  wire [3:0] button_count = {3'b0, button_data[0]} + {3'b0, button_data[1]} + {3'b0, button_data[2]} +
+                            {3'b0, button_data[3]} + {3'b0, button_data[4]} + {3'b0, button_data[5]} +
+                            {3'b0, button_data[6]} + {3'b0, button_data[7]} + {3'b0, button_data[8]} +
+                            {3'b0, button_data[9]} + {3'b0, button_data[10]} + {3'b0, button_data[11]};
+  
+  // If more than X buttons pressed, output all unpressed (adjust threshold as needed)
+  wire too_many_buttons = (button_count > 4'd2);  // More than 2 buttons = suspicious
+  
+  // Output all zeros if too many buttons, otherwise use actual data
+  wire [11:0] filtered_data = too_many_buttons ? 12'b0 : button_data;
+  
+  assign {b, y, select, start, up, down, left, right, a, x, l, r} = filtered_data;
+
+endmodule
+
 module gamepad_pmod_single (
     input wire rst_n,
     input wire clk,
@@ -479,121 +528,4 @@ module gamepad_pmod_single (
       .r(r),
       .is_present(is_present)
   );
-
-endmodulemodule gamepad_pmod_driver #(
-    parameter BIT_WIDTH = 24
-) (
-    input wire rst_n,
-    input wire clk,
-    input wire pmod_data,
-    input wire pmod_clk,
-    input wire pmod_latch,
-    output reg [BIT_WIDTH-1:0] data_reg
-);
-
-  reg pmod_clk_prev;
-  reg pmod_latch_prev;
-  reg [BIT_WIDTH-1:0] shift_reg;
-
-  // Sync Pmod signals to the clk domain:
-  reg [1:0] pmod_data_sync;
-  reg [1:0] pmod_clk_sync;
-  reg [1:0] pmod_latch_sync;
-
-  always @(posedge clk) begin
-    if (~rst_n) begin
-      pmod_data_sync  <= 2'b0;
-      pmod_clk_sync   <= 2'b0;
-      pmod_latch_sync <= 2'b0;
-    end else begin
-      pmod_data_sync  <= {pmod_data_sync[0], pmod_data};
-      pmod_clk_sync   <= {pmod_clk_sync[0], pmod_clk};
-      pmod_latch_sync <= {pmod_latch_sync[0], pmod_latch};
-    end
-  end
-
-  always @(posedge clk) begin
-    if (~rst_n) begin
-      /* set data and shift registers to all ones
-       * such that it is detected as "not present" yet.
-       */
-      data_reg <= {BIT_WIDTH{1'b1}};
-      shift_reg <= {BIT_WIDTH{1'b1}};
-      pmod_clk_prev <= 1'b0;
-      pmod_latch_prev <= 1'b0;
-    end
-    begin
-      pmod_clk_prev   <= pmod_clk_sync[1];
-      pmod_latch_prev <= pmod_latch_sync[1];
-
-      // Capture data on rising edge of pmod_latch:
-      if (pmod_latch_sync[1] & ~pmod_latch_prev) begin
-        data_reg <= shift_reg;
-      end
-
-      // Sample data on rising edge of pmod_clk:
-      if (pmod_clk_sync[1] & ~pmod_clk_prev) begin
-        shift_reg <= {shift_reg[BIT_WIDTH-2:0], pmod_data_sync[1]};
-      end
-    end
-  end
-
-endmodule
-
-/**
- * gamepad_pmod_decoder -- Decodes raw data from the Gamepad Pmod.
- *
- * This module takes a 12-bit parallel data register (`data_reg`) 
- * and decodes it into individual button states. It also determines
- * whether a controller is connected.
- *
- * Functionality:
- *   - If `data_reg` contains all `1's` (`0xFFF`), it indicates that no controller is connected.
- *   - Otherwise, it extracts individual button states from `data_reg`.
- *
- * Inputs:
- *   - `data_reg [11:0]`: Captured button state data from the gamepad.
- *
- * Outputs:
- *   - `b, y, select, start, up, down, left, right, a, x, l, r`: Individual button states (`1` = pressed, `0` = released).
- *   - `is_present`: Indicates whether a controller is connected (`1` = connected, `0` = not connected).
- */
-module gamepad_pmod_decoder (
-    input wire [11:0] data_reg,
-    output wire b,
-    output wire y,
-    output wire select,
-    output wire start,
-    output wire up,
-    output wire down,
-    output wire left,
-    output wire right,
-    output wire a,
-    output wire x,
-    output wire l,
-    output wire r,
-    output wire is_present
-);
-
-  // When the controller is not connected, the data register will be all 1's
-  wire reg_empty = (data_reg == 12'hfff);
-  assign is_present = reg_empty ? 0 : 1'b1;
-
-  // Fix issue with PMOD: irregular/unreliable data for every other latch cycle
-  wire [11:0] button_data = reg_empty ? 12'b0 : data_reg;
-  
-  // Count number of pressed buttons (count 1's in button_data)
-  wire [3:0] button_count = {3'b0, button_data[0]} + {3'b0, button_data[1]} + {3'b0, button_data[2]} +
-                            {3'b0, button_data[3]} + {3'b0, button_data[4]} + {3'b0, button_data[5]} +
-                            {3'b0, button_data[6]} + {3'b0, button_data[7]} + {3'b0, button_data[8]} +
-                            {3'b0, button_data[9]} + {3'b0, button_data[10]} + {3'b0, button_data[11]};
-  
-  // If more than X buttons pressed, output all unpressed (adjust threshold as needed)
-  wire too_many_buttons = (button_count > 4'd2);  // More than 2 buttons = suspicious
-  
-  // Output all zeros if too many buttons, otherwise use actual data
-  wire [11:0] filtered_data = too_many_buttons ? 12'b0 : button_data;
-  
-  assign {b, y, select, start, up, down, left, right, a, x, l, r} = filtered_data;
-
 endmodule
