@@ -6,38 +6,6 @@
 // Backpressure‑safe (no ready comb loops)
 // =============================================================
 
-
-/////////////////////////
-////TOP Module////
-
-// ============================
-// tqvp_pac_rr.sv (MVP wrapper)
-// ============================
-
-// Code your design here
-
-// =============================================================
-// PAC‑RR Arbiter MVP — SystemVerilog Skeletons (EDA Playground Ready)
-// Weighted RR + Burst Caps(later) + Simple Aging (later, +1 bump) + Optional Lock Cap(later)
-// Backpressure‑safe (no ready comb loops)
-// =============================================================
-
-
-/////////////////////////
-////TOP Module////
-
-// ============================
-// tqvp_pac_rr.v (MVP wrapper)
-// ============================
-// Author: Aakarshitha Suresh
-
-// =============================================================
-// PAC‑RR Arbiter MVP — SystemVerilog Skeletons (EDA Playground Ready)
-// Weighted RR + Burst Caps(later) + Simple Aging (later, +1 bump) + Optional Lock Cap(later)
-// Backpressure‑safe (no ready comb loops)
-// =============================================================
-
-
 /////////////////////////
 ////TOP Module////
 
