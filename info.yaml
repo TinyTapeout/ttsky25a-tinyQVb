@@ -1,16 +1,16 @@
 # Tiny Tapeout project information
 project:
-  title:        "TinyQV 'Berzerk' - Crowdsourced Risc-V SoC"      # Project title
-  author:       "Michael Bell, et al"      # Your name
-  discord:      "rebelmike"      # Your discord username, for communication and automatically assigning you a Tapeout role (optional)
-  description:  "A Risc-V SoC with peripherals from the Tiny Tapeout Risc-V challenge, codename 'Berzerk'"      # One line description of what your project does
+  title:        "Tiny Weighted Arbiter"      # Project title
+  author:       "Aakarshitha Suresh"      # Your name
+  discord:      "aakarshitha1847"      # Your discord username, for communication and automatically assigning you a Tapeout role (optional)
+  description:  "A weighted round-robin arbiter with configurable per-master weights, ready/valid handshaking, and register-mapped control for fair and programmable request scheduling for the Tiny Tapeout Risc-V challenge"      # One line description of what your project does
   language:     "Verilog" # other examples include SystemVerilog, Amaranth, VHDL, etc
-  clock_hz:     64000000       # Clock frequency in Hz (or 0 if not applicable)
+  clock_hz:     10000000       # Clock frequency in Hz (or 0 if not applicable)
 
   # How many tiles your design occupies? A single tile is about 167x108 uM.
-  tiles: "4x4"          # Valid values: 1x1, 1x2, 2x2, 3x2, 4x2, 6x2 or 8x2
+  tiles: "1x1"          # Valid values: 1x1, 1x2, 2x2, 3x2, 4x2, 6x2 or 8x2
 
-  # Your top module name must start with "tt_um_". Make it unique by including your github username:
+  # Your top module name must start with "tt_um_". Make it unique by including your github username://modified tqvp_example in the tt_Warpper under src/user_peripherals/Tiny_Arbiter
   top_module:  "tt_um_tt_tinyQVb"
 
   # List your project's source files here.
@@ -55,6 +55,8 @@ project:
     - "user_peripherals/Configurable_crc32/crc32_v.v"
     - "user_peripherals/Configurable_crc32/bit_reverser.v"
     - "user_peripherals/fib_rng/fib_rng.v"
+    - "user_peripherals/Tiny_Arbiter/Tiny_Arbiter_Core.v"
+    - "user_peripherals/Tiny_Arbiter/Tiny_Arbiter_Top_Wrapper.v"
     - "tinyQV/cpu/tinyqv.v"
     - "tinyQV/cpu/alu.v"
     - "tinyQV/cpu/core.v"
@@ -67,6 +69,7 @@ project:
     - "tinyQV/cpu/latch_reg.v"
     - "tinyQV/cpu/time.v"
     - "tinyQV/peri/uart/uart_tx.v"
+    
 
 
 # The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
