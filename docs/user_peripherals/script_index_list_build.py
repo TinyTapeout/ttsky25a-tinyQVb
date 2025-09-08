@@ -6,7 +6,7 @@ BASE_DIR = Path(__file__).parent
 OUT_MD   = BASE_DIR / "index_list.md"
 OUT_JSON = BASE_DIR / "index_list.json"
 
-REPO_URL = "https://github.com/TinyTapeout/ttsky25a-tinyQV"
+REPO_URL = "https://github.com/TinyTapeout/ttsky25a-tinyQVb"
 BRANCH   = "main"
 REL_PATH = "docs/user_peripherals"
 
