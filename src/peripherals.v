@@ -22,7 +22,7 @@ module tinyQV_peripherals #(parameter CLOCK_MHZ=64) (
     input  [7:0]  ui_in_raw,    // The input PMOD, not synchronized
     output [7:0]  uo_out,       // The output PMOD.  Each wire is only connected if this peripheral is selected
 
-    output        audio,        // An extra output that can be selected on to uio[7]
+    output reg    audio,        // An extra output that can be selected on to uio[7]
     output        audio_select, // Whether audio should be selected on uio[7] (resets to 0).
 
     input [10:0]  addr_in,
@@ -176,7 +176,15 @@ module tinyQV_peripherals #(parameter CLOCK_MHZ=64) (
         end
     end
 
-    assign audio = uo_out_from_simple_peri[5][7];   // Matt PWM
+    always @(posedge clk) begin
+        case (audio_func_sel[1:0])
+            2'b00: audio <= uo_out_from_user_peri[8][7];   // PWL synth right
+            2'b01: audio <= uo_out_from_user_peri[8][6];   // PWL Synth left
+            2'b10: audio <= uo_out_from_simple_peri[4][7];  // AY8913
+            2'b11: audio <= uo_out_from_simple_peri[5][7];  // Matt PWM
+        endcase
+    end
+
     assign audio_select = audio_func_sel[2];
 
     // --------------------------------------------------------------------- //
@@ -299,7 +307,7 @@ module tinyQV_peripherals #(parameter CLOCK_MHZ=64) (
         .user_interrupt(user_interrupts[7])
     );
 
-    tqvp_full_empty i_user_peri08 (
+    tqvp_toivoh_pwl_synth i_user_peri08 (
         .clk(clk),
         .rst_n(rst_n),
 
@@ -432,7 +440,7 @@ module tinyQV_peripherals #(parameter CLOCK_MHZ=64) (
         .user_interrupt(user_interrupts[14])
     );
 
-    tqvp_full_example i_user_peri15 (
+    tqvp_full_empty i_user_peri15 (
         .clk(clk),
         .rst_n(rst_n),
 
@@ -484,7 +492,7 @@ module tinyQV_peripherals #(parameter CLOCK_MHZ=64) (
         .data_out(data_from_simple_peri[1])
     );
 
-    tqvp_byte_empty i_user_simple02 (
+    tqvp_nes_snes_controller kingslanding_snes (
         .clk(clk),
         .rst_n(rst_n),
 
@@ -499,7 +507,7 @@ module tinyQV_peripherals #(parameter CLOCK_MHZ=64) (
         .data_out(data_from_simple_peri[2])
     );
 
-    tqvp_byte_empty i_user_simple03 (
+    tqvp_noclueALU noclueALU03 (
         .clk(clk),
         .rst_n(rst_n),
 
@@ -678,11 +686,11 @@ module tinyQV_peripherals #(parameter CLOCK_MHZ=64) (
         .data_out(data_from_simple_peri[14])
     );
 
-    tqvp_byte_example i_user_simple15 (
+    tqvp_nes_snes_controller kingslanding_nes_25(
         .clk(clk),
         .rst_n(rst_n),
 
-        .ui_in(ui_in),
+        .ui_in(ui_in_raw),
         .uo_out(uo_out_from_simple_peri[15]),
 
         .address(addr_in[3:0]),
@@ -692,5 +700,6 @@ module tinyQV_peripherals #(parameter CLOCK_MHZ=64) (
 
         .data_out(data_from_simple_peri[15])
     );
+
 
 endmodule

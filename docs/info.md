@@ -41,6 +41,7 @@ The peripherals making up the SoC are contributed by the Tiny Tapeout community,
 
 | Register | Address | Description |
 | -------- | ------- | ----------- |
+| ID       | 0x8000008 (R) | Instance of TinyQV: 0x42 (ASCII B) |
 | SEL      | 0x800000C (R/W) | Bits 6-7 enable peripheral output on the corresponding bit on out6-7, otherwise out6-7 is used for debug. |
 | DEBUG_UART_DATA | 0x8000018 (W) | Transmits the byte on the debug UART |
 | STATUS   | 0x800001C (R) | Bit 0 indicates whether the debug UART TX is busy, bytes should not be written to the data register while this bit is set. |
@@ -80,7 +81,10 @@ If MTIME is after MTIMECMP (by less than 2^30 microseconds to deal with wrap), t
 | Audio function select | Peripheral |
 | --------------------- | ---------- |
 | 0-3                   | PSRAM B enabled |
-| 4-7                   | 21 Matt PWM out 7 |
+| 4                     | 08 PWL Synth out 7 |
+| 5                     | 08 PWL Synth out 6 |
+| 6                     | 20 AY8913 out 7 |
+| 7                     | 21 Matt PWM out 7 |
 
 ### UART
 
@@ -91,6 +95,27 @@ If MTIME is after MTIMECMP (by less than 2^30 microseconds to deal with wrap), t
 | TX_BUSY | 0x8000084 (R) | Bit 0 indicates whether the UART TX is busy, bytes should not be written to the data register while this bit is set. Bit 1 indicates whether a received byte is available to be read. |
 | DIVIDER | 0x8000088 (R/W) | 13 bit clock divider to set the UART baud rate |
 | RX_SELECT | 0x800008C (R/W) | 1 bit select UART RX pin: `ui_in[7]` when low (default), `ui_in[3]` when high |
+
+## Contributed Peripherals
+
+| # | Name | Author(s) | Type | File |
+|---:|---|---|---|---|
+| 3 | Gamepad Pmod peripheral | Mike Bell | Full | [03_game_pmod.md](https://github.com/TinyTapeout/ttsky25a-tinyQVb/blob/main/docs/user_peripherals/03_game_pmod.md) |
+| 4 | RV2A03 | [fjpolo](https://www.github.com/fjpolo) | Full | [04_RV2A03.md](https://github.com/TinyTapeout/ttsky25a-tinyQVb/blob/main/docs/user_peripherals/04_RV2A03.md) |
+| 5 | Frequency Synthesizer peripheral | htfab | Full | [05_freq_synth.md](https://github.com/TinyTapeout/ttsky25a-tinyQVb/blob/main/docs/user_peripherals/05_freq_synth.md) |
+| 6 | CRC32 Peripheral | Vicente Ramirez & Francisco Aguirre | Full | [06_Configurable_crc32.md](https://github.com/TinyTapeout/ttsky25a-tinyQVb/blob/main/docs/user_peripherals/06_Configurable_crc32.md) |
+| 7 | VGA scope | Ciro Cattuto | Full | [07_vgascope.md](https://github.com/TinyTapeout/ttsky25a-tinyQVb/blob/main/docs/user_peripherals/07_vgascope.md) |
+| 8 | PWL Synth | Toivo Henningsson | Full | [08_pwl_synth.md](https://github.com/TinyTapeout/ttsky25a-tinyQVb/blob/main/docs/user_peripherals/08_pwl_synth.md) |
+| 9 | Watchdog peripheral with 32-bit counter and window | Steve Jenson <stevej@gmail.com> | Full | [09_stevej_watchdog_window.md](https://github.com/TinyTapeout/ttsky25a-tinyQVb/blob/main/docs/user_peripherals/09_stevej_watchdog_window.md) |
+| 12 | VGA adapter for TinyQV | ReJ aka Renaldas Zioma | Full | [12_vga.md](https://github.com/TinyTapeout/ttsky25a-tinyQVb/blob/main/docs/user_peripherals/12_vga.md) |
+| 16 | Author: Gerardo Huerta | Gerardo Huerta | Simple | [16_gray.md](https://github.com/TinyTapeout/ttsky25a-tinyQVb/blob/main/docs/user_peripherals/16_gray.md) |
+| 17 | FibRNG | Oliver Keszocze | Simple | [17_fibRNG.md](https://github.com/TinyTapeout/ttsky25a-tinyQVb/blob/main/docs/user_peripherals/17_fibRNG.md) |
+| 19 | A teeny tiny ALU that can ADD, SUB, AND and OR two 8 bit numbers | Aditya Vikram Singh | Simple | [19_noclueALU.md](https://github.com/TinyTapeout/ttsky25a-tinyQVb/blob/main/docs/user_peripherals/19_noclueALU.md) |
+| 20 | AY-3-819x | ReJ aka Renaldas Zioma | Simple | [20_AY8913.md](https://github.com/TinyTapeout/ttsky25a-tinyQVb/blob/main/docs/user_peripherals/20_AY8913.md) |
+| 21 | 8 bit PWM generator with adjustable frequency | Matt Venn | Simple | [21_matt_pwm.md](https://github.com/TinyTapeout/ttsky25a-tinyQVb/blob/main/docs/user_peripherals/21_matt_pwm.md) |
+| 24 | Digital Integrator Peripheral | Kushal | Simple | [24_digital_integrator.md](https://github.com/TinyTapeout/ttsky25a-tinyQVb/blob/main/docs/user_peripherals/24_digital_integrator.md) |
+| 30 | SPI controller | Mike Bell | Simple | [30_spi.md](https://github.com/TinyTapeout/ttsky25a-tinyQVb/blob/main/docs/user_peripherals/30_spi.md) |
+| 31 | NES/SNES Receiver | Kwashie Andoh, James Ashie Kotey | Simple | [31_snes_nes_reciever.md](https://github.com/TinyTapeout/ttsky25a-tinyQVb/blob/main/docs/user_peripherals/31_snes_nes_reciever.md) |
 
 # How to test
 
