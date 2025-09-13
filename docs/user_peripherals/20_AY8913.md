@@ -63,6 +63,10 @@ All registers are **read only** in this peripheral and start in **unknown** unin
 Square waves are produced by counting down the 12-bit counters. Counter counts up from 0. Once the corresponsding register value is reached, counter is reset and
 the output bit of the channel is flipped producing square waves.
 
+The audio chip is internally clocked at 2 MHz which was the most common timing used during the 8-bit era for AY-3-891x and the following formula can be used to calculate the tone period:
+
+	2 MHz / 16 * note frequency
+
 ### Noise generator
 
 Noise is produced with 17-bit [Linear-feedback Shift Register (LFSR)](https://en.wikipedia.org/wiki/Linear-feedback_shift_register) that flips the output bit pseudo randomly.
@@ -73,7 +77,7 @@ The shift rate of the LFSR register is controller by the 5-bit counter.
 The envelope shape is controlled with 4-bit register, but can take only 10 distinct patterns. The speed of the envelope is controlled with 16-bit counter. Only a single envelope is produced that can be shared by any combination of the channels.
 
 ### Volume
-Each of the three AY-3-891x channels have dedicated DAC that converts 16 levels of volume to analog output. Volume levels are 3 dB apart in AY-3-891x.
+Each of the three AY-3-891x channels have dedicated DAC that converts 16 levels of volume to a logarithmic scale roughly 3 dB apart.
 
 ## IO pins
 
