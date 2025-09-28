@@ -68,6 +68,7 @@ project:
     - "user_peripherals/snes_nes/Receiver_Core.v"
     - "user_peripherals/pwl_synth/pwl_synth.sv"
     - "user_peripherals/pwl_synth/pwl_synth_memory.sv"
+    - "user_peripherals/equalizer.v"
     - "tinyQV/cpu/tinyqv.v"
     - "tinyQV/cpu/alu.v"
     - "tinyQV/cpu/core.v"
