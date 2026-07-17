@@ -1,14 +1,16 @@
 ![](../../workflows/gds/badge.svg) ![](../../workflows/docs/badge.svg) ![](../../workflows/test/badge.svg) ![](../../workflows/fpga/badge.svg)
 
-# TinyQV - A Risc-V SoC for Tiny Tapeout
+# TinyQV "Berzerk" - A Risc-V SoC for Tiny Tapeout
 
 ![Risc-V competition logo](docs/riscv_compo.jpg)
 
-TinyQV is accepting peripherals for tape out on the Tiny Tapeout [ttsky25a shuttle](https://app.tinytapeout.com/shuttles/ttsky25a) as part of the [Tiny Tapeout Risc-V peripheral challenge](https://tinytapeout.com/competitions/risc-v-peripheral/).
+TinyQV is on the Tiny Tapeout [ttsky25a shuttle](https://app.tinytapeout.com/shuttles/ttsky25a) as part of the [Tiny Tapeout Risc-V peripheral challenge](https://tinytapeout.com/competitions/risc-v-peripheral/).
 
-To contribute, start from either:
-- The [byte peripheral template](https://github.com/TinyTapeout/tinyqv-byte-peripheral-template) for simpler peripherals, or
-- The [full peripheral template](https://github.com/TinyTapeout/tinyqv-full-peripheral-template).
+There is also another instance - ["Asteroids"](https://github.com/TinyTapeout/ttsky25a-tinyQV), look there for more peripheral contributions.
+
+If you have a sky25a devkit and a QSPI Pmod, you can run TinyQV using the [TinyQV programmer](https://program.tinyqv.com).  This allows binaries to be loaded into flash on the Pmod and executed by TinyQV.
+
+There is a Micropython port for TinyQV, and we expect initial peripheral testing to use Micropython, as it allows more interactive testing at the REPL and easier scripting than using the C SDK.  Find some test scripts to start from [here](micropython/).
 
 Further reading:
 - [Documentation for project](docs/info.md)
@@ -17,6 +19,8 @@ Further reading:
 - [tinyQV-sdk for building tinyQV programs](https://github.com/MichaelBell/tinyQV-sdk)
 - [Example tinyQV programs](https://github.com/MichaelBell/tinyQV-projects)
 - [tinyQV Micropython](https://github.com/MichaelBell/micropython/tree/tinyqv-sky25a)
+- The [byte peripheral template](https://github.com/TinyTapeout/tinyqv-byte-peripheral-template)
+- The [full peripheral template](https://github.com/TinyTapeout/tinyqv-full-peripheral-template).
 
 ## TinyQV SoC Diagram
 
