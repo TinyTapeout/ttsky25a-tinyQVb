@@ -21,8 +21,8 @@ WAVEFORM_PWL_OSC = 2
 WAVEFORM_ORION = 3
 
 OSC_SYNC_OFF = 0
-OSC_SYNC_4_BIT = 1
-OSC_SYNC_HARD = 2
+OSC_SYNC_4_BIT = 2
+OSC_SYNC_HARD = 1
 OSC_SYNC_SOFT = 3
 
 CFG_STEREO_EN = 1
@@ -167,13 +167,13 @@ def play_note(channel, note, amp=63, relative_detune=0):
 	note_off(channel)
 	reg_write(channel, REG_SWEEP_WS, 0)
 	write_curr_waveform(channel)
-	play_raw_note(channel, get_f_period(note), amp)
+	play_raw_note(channel, get_f_period(note, octave=0), amp)
 	reg_write(channel, REG_SWEEP_PA, curr_sweep_pa[channel])
 	reg_write(channel, REG_SWEEP_WS, curr_sweep_ws[channel])
 
 def set_waveform(channel, slope_r=0, slope_f=0, pwm_offset=0, detune_exp=0, waveform=0, freq_mults=0, common_sat=False, osc_sync=0, detune_frac=False, common_quant=False, quantization_level=4):
 	mode = (detune_exp&7) | ((waveform&1)<<3) | ((freq_mults&7)<<4) | ((common_sat&1)<<7) | ((waveform&2)<<7) | ((osc_sync&3)<<9) | ((detune_frac&1)<<11)
-	mode |= (common_quant << 12) << ((quantization_level&7)<<13)
+	mode |= (common_quant << 12) | ((quantization_level&7)<<13)
 
 	curr_slopes_r[channel] = slope_r
 	curr_slopes_f[channel] = slope_f
